@@ -16,6 +16,7 @@ logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
 setmessage = []
 viewstatic = []
 
+userchatid = []
 adminchatid = []
 graphstart = datetime.now()
 
@@ -24,7 +25,7 @@ helpmarkup = {'keyboard': [['Массовая рассылка'], ['Статис
 staticmarkup = {'keyboard': [['Статистика сервера'], ['Память на сервере'], ['Подписки на бота'], ['Назад']]}
 yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
 yn_only_markup = {'keyboard': [['Да'], ['Нет']]}
-elementmarkup = {'keyboard': [['Про нас'], ['Социальные сети'], ['Заказать прайслист'], ['Proxy для любимого клиента']]}
+elementmarkup = {'keyboard': [['Про нас'], ['Социальные сети'], ['Подписка на бота'], ['Proxy для любимого клиента']]}
 soc_elementmarkup = {'keyboard': [['Instagram'], ['VK'], ['Официальный сайт'], ['Назад']]}
 hide_keyboard = {'hide_keyboard': True}
 
@@ -32,6 +33,8 @@ conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
 for row in cursor.execute("select chat_id from chats where is_admin = '1';"):
     adminchatid.append((row[0]))
+for row in cursor.execute("select chat_id from chats where is_registered_user = '1';"):
+    userchatid.append((row[0]))
 conn.close()
 
 def clearall(chat_id):
@@ -71,6 +74,7 @@ class YourBot(telepot.Bot):
                         bot.sendMessage(chat_id, "Смотрим статистику", reply_markup=staticmarkup)
                 if chat_id in setmessage:
                     if msg['text'] == 'Хватит':
+                        bot.sendChatAction(chat_id, 'typing')
                         setmessage.remove(chat_id)
                         bot.sendMessage(chat_id, "Всё закончил", reply_markup=helpmarkup)
                     elif msg['text'] != 'Массовая рассылка':
@@ -138,7 +142,15 @@ class YourBot(telepot.Bot):
                     bot.sendMessage(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup)
                     conn = sqlite3.connect("mydatabase.db")
                     cursor = conn.cursor()
-                    cursor.execute("INSERT INTO chats(chat_id, is_admin) VALUES (?, 0);", (str(chat_id),))
+                    cursor.execute("INSERT INTO chats(chat_id) VALUES (?);", (str(chat_id),))
+                    conn.commit()
+                    conn.close()
+                elif msg['text'] == 'Подписка на бота':
+                    bot.sendChatAction(chat_id, 'typing')
+                    bot.sendMessage(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup)
+                    conn = sqlite3.connect("mydatabase.db")
+                    cursor = conn.cursor()
+                    cursor.execute("update chats set is_registered_user = 1 where chat_id = '" + (str(chat_id)) + "';")
                     conn.commit()
                     conn.close()
                 elif msg['text'] == "Про нас":
