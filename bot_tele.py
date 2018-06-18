@@ -83,7 +83,7 @@ class YourBot(telepot.Bot):
                         setmessage.remove(chat_id)
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
-                        for row in cursor.execute("select chat_id from chats where status = 0"):
+                        for row in cursor.execute("select chat_id from chats where status = 1"):
                             bot.sendMessage(row[0], msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
                         conn.close()
                         bot.sendMessage(chat_id, "Сообщение отправил, продолжим...", reply_markup=helpmarkup)
