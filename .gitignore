@@ -1,2 +1,4 @@
 *.db
 logs/
+.idea/
+__pycache__/
