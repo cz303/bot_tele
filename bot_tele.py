@@ -81,12 +81,14 @@ class YourBot(telepot.Bot):
                     elif msg['text'] != 'Массовая рассылка':
                         bot.sendChatAction(chat_id, 'typing')
                         setmessage.remove(chat_id)
+                        k = 0
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         for row in cursor.execute("select chat_id from chats where status = 1"):
                             bot.sendMessage(row[0], msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
+                            k =+ 1
                         conn.close()
-                        bot.sendMessage(chat_id, "Сообщение отправил, продолжим...", reply_markup=helpmarkup)
+                        bot.sendMessage(chat_id, "Отправил" + str(k) + " сообщений, продолжим...", reply_markup=helpmarkup)
                 if chat_id in viewstatic:
                     if msg['text'] == 'Назад':
                         bot.sendChatAction(chat_id, 'typing')
