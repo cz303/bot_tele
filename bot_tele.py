@@ -132,10 +132,6 @@ class YourBot(telepot.Bot):
                             message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
                         conn.close()
                         bot.sendMessage(chat_id, message, parse_mode='MARKDOWN')
-                    elif msg['text'] == 'Память на сервере':
-                        bot.sendChatAction(chat_id, 'typing')
-                        tmperiod = "Последние %.2f часа" % ((datetime.now() - graphstart).total_seconds() / 3600)
-                        bot.sendPhoto(chat_id, plotmemgraph(memlist, xaxis, tmperiod))
             else:
                 if msg['text'] == '/start':
                     bot.sendChatAction(chat_id, 'typing')
