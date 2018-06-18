@@ -4,6 +4,7 @@
     <list default="true" id="6acd97f2-ad1d-4a9d-be1e-1b6868739107" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bot_tele.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot_tele.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/db.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,8 +18,8 @@
       <file leaf-file-name="bot_tele.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/bot_tele.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="143" column="63" selection-start-line="143" selection-start-column="63" selection-end-line="143" selection-end-column="63" />
+            <state relative-caret-position="216">
+              <caret line="86" column="91" selection-start-line="86" selection-start-column="89" selection-end-line="86" selection-end-column="91" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -30,7 +31,7 @@
         <entry file="file://$PROJECT_DIR$/db.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="119">
-              <caret line="7" column="42" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="42" />
+              <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
             </state>
           </provider>
         </entry>
@@ -54,6 +55,11 @@
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>is</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="PUSH_AUTO_UPDATE" value="true" />
@@ -235,7 +241,21 @@
       <option name="project" value="LOCAL" />
       <updated>1529344768119</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="123">
+      <created>1529346679580</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1529346679580</updated>
+    </task>
+    <task id="LOCAL-00014" summary="123">
+      <created>1529347789063</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1529347789063</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -362,14 +382,14 @@
     <entry file="file://$PROJECT_DIR$/db.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
-          <caret line="7" column="42" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="42" />
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bot_tele.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="143" column="63" selection-start-line="143" selection-start-column="63" selection-end-line="143" selection-end-column="63" />
+        <state relative-caret-position="216">
+          <caret line="86" column="91" selection-start-line="86" selection-start-column="89" selection-end-line="86" selection-end-column="91" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>

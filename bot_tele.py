@@ -22,7 +22,7 @@ graphstart = datetime.now()
 
 stopmarkup = {'keyboard': [['Хватит']]}
 helpmarkup = {'keyboard': [['Массовая рассылка'], ['Статистика']]}
-staticmarkup = {'keyboard': [['Статистика сервера'], ['Память на сервере'], ['Подписки на бота'], ['Назад']]}
+staticmarkup = {'keyboard': [['Статистика сервера'], ['Подписки на бота'], ['Назад']]}
 yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
 yn_only_markup = {'keyboard': [['Да'], ['Нет']]}
 elementmarkup_unreg = {'keyboard': [['Про нас'], ['Социальные сети'], ['Подписка на бота'], ['Proxy для любимого клиента']]}
@@ -32,9 +32,9 @@ hide_keyboard = {'hide_keyboard': True}
 
 conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
-for row in cursor.execute("select chat_id from chats where is_admin = '1';"):
+for row in cursor.execute("select chat_id from chats where status = 2;"):
     adminchatid.append((row[0]))
-for row in cursor.execute("select chat_id from chats where is_registered_user = '1';"):
+for row in cursor.execute("select chat_id from chats where status = 1;"):
     userchatid.append((row[0]))
 conn.close()
 
@@ -83,7 +83,7 @@ class YourBot(telepot.Bot):
                         setmessage.remove(chat_id)
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
-                        for row in cursor.execute("select chat_id from chats where is_admin = '0'"):
+                        for row in cursor.execute("select chat_id from chats where status = 0"):
                             bot.sendMessage(row[0], msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
                         conn.close()
                         bot.sendMessage(chat_id, "Сообщение отправил, продолжим...", reply_markup=helpmarkup)
@@ -133,7 +133,7 @@ class YourBot(telepot.Bot):
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         for row in cursor.execute(
-                                "select (case when is_admin = 0 then 'Пользователей' else 'Администраторов' end) as label,count(chat_id) from chats group by label;"):
+                                "select (case when status = 0 then 'Пользователей' when status = 1 then 'Зарегистрированных пользователей' else 'Администраторов' end) as label,count(chat_id) from chats group by label;"):
                             message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
                         conn.close()
                         bot.sendMessage(chat_id, message, parse_mode='MARKDOWN')
@@ -156,7 +156,7 @@ class YourBot(telepot.Bot):
                         userchatid.append(chat_id)
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
-                        cursor.execute("update chats set is_registered_user = 1 where chat_id = '" + (str(chat_id)) + "';")
+                        cursor.execute("update chats set status = 1 where chat_id = '" + (str(chat_id)) + "';")
                         conn.commit()
                         conn.close()
                         bot.sendMessage(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
