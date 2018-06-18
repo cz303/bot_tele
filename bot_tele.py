@@ -88,7 +88,7 @@ class YourBot(telepot.Bot):
                             bot.sendMessage(row[0], msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
                             k =+ 1
                         conn.close()
-                        bot.sendMessage(chat_id, "Отправил" + str(k) + " сообщений, продолжим...", reply_markup=helpmarkup)
+                        bot.sendMessage(chat_id, "Отправил *" + str(k) + "* сообщений, продолжим...", parse_mode='MARKDOWN', reply_markup=helpmarkup)
                 if chat_id in viewstatic:
                     if msg['text'] == 'Назад':
                         bot.sendChatAction(chat_id, 'typing')
