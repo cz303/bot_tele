@@ -2,35 +2,16 @@ from tokens \
     import *
 
 import matplotlib
-
-matplotlib.use("Agg")  # has to be before any other matplotlibs imports to set a "headless" backend
-import matplotlib.pyplot as plt
+matplotlib.use("Agg")
 import psutil
 from datetime import datetime
-from subprocess import Popen, PIPE, STDOUT
 import operator
-import collections
-# import sys
 import time
-# import threading
-# import random
 import telepot
-# from telepot.namedtuple import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardHide, ForceReply
-from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
-# from telepot.namedtuple import InlineQueryResultArticle, InlineQueryResultPhoto, InputTextMessageContent
 import sqlite3
 import logging
-import subprocess
 
-# add filemode="w" to overwrite
 logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
-
-memorythreshold = 85  # If memory usage more this %
-poll = 300  # seconds
-
-timelist = []
-memlist = []
-xaxis = []
 
 setmessage = []
 viewstatic = []
@@ -43,7 +24,6 @@ helpmarkup = {'keyboard': [['Массовая рассылка'], ['Статис
 staticmarkup = {'keyboard': [['Статистика сервера'], ['Память на сервере'], ['Подписки на бота'], ['Назад']]}
 yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
 yn_only_markup = {'keyboard': [['Да'], ['Нет']]}
-
 elementmarkup = {'keyboard': [['Про нас'], ['Социальные сети'], ['Заказать прайслист'], ['Proxy для любимого клиента']]}
 soc_elementmarkup = {'keyboard': [['Instagram'], ['VK'], ['Официальный сайт'], ['Назад']]}
 hide_keyboard = {'hide_keyboard': True}
@@ -54,13 +34,11 @@ for row in cursor.execute("select chat_id from chats where is_admin = '1';"):
     adminchatid.append((row[0]))
 conn.close()
 
-
 def clearall(chat_id):
     if chat_id in setmessage:
         setmessage.remove(chat_id)
     if chat_id in viewstatic:
         viewstatic.remove(chat_id)
-
 
 def RepresentsInt(s):
     try:
@@ -69,28 +47,10 @@ def RepresentsInt(s):
     except ValueError:
         return False
 
-
-def plotmemgraph(memlist, xaxis, tmperiod):
-    plt.xlabel(tmperiod)
-    plt.ylabel('% Использовано')
-    plt.title('График использования памяти')
-    plt.text(0.1 * len(xaxis), memorythreshold + 2, 'Максимум: ' + str(memorythreshold) + ' %')
-    memthresholdarr = []
-    for xas in xaxis:
-        memthresholdarr.append(memorythreshold)
-    plt.plot(xaxis, memlist, 'b-', xaxis, memthresholdarr, 'r--')
-    plt.axis([0, len(xaxis) - 1, 0, 100])
-    plt.savefig('/tmp/graph.png')
-    plt.close()
-    f = open('/tmp/graph.png', 'rb')
-    return f
-
-
 class YourBot(telepot.Bot):
     def __init__(self, *args, **kwargs):
         super(YourBot, self).__init__(*args, **kwargs)
         self._answerer = telepot.helper.Answerer(self)
-        # self._message_with_inline_keyboard = None
 
     def on_chat_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
@@ -228,37 +188,12 @@ class YourBot(telepot.Bot):
 TOKEN = telegrambot
 bot = YourBot(TOKEN)
 bot.message_loop()
-tr = 0
-xx = 0
 
-# for admin_chat_id in adminchatid:
-#    bot.sendChatAction(admin_chat_id, 'typing')
-#    bot.sendMessage(admin_chat_id, "Я запущен!", reply_markup=helpmarkup)
+for admin_chat_id in adminchatid:
+    bot.sendChatAction(admin_chat_id, 'typing')
+    bot.sendMessage(admin_chat_id, "Я запущен!", reply_markup=helpmarkup)
 
 
 # Keep the program running.
 while 1:
-    if tr == poll:
-        tr = 0
-        timenow = datetime.now()
-        memck = psutil.virtual_memory()
-        mempercent = memck.percent
-        if len(memlist) > 300:
-            memq = collections.deque(memlist)
-            memq.append(mempercent)
-            memq.popleft()
-            memlist = memq
-            memlist = list(memlist)
-        else:
-            xaxis.append(xx)
-            xx += 1
-            memlist.append(mempercent)
-        memfree = memck.available / 1000000
-        if mempercent > memorythreshold:
-            memavail = "Available memory: %.2f GB" % (memck.available / 1000000000)
-            graphend = datetime.now()
-            tmperiod = "Last %.2f hours" % ((graphend - graphstart).total_seconds() / 3600)
-            for adminid in adminchatid:
-                bot.sendMessage(adminid, "CRITICAL! LOW MEMORY!\n" + memavail)
-                bot.sendPhoto(adminid, plotmemgraph(memlist, xaxis, tmperiod))
     time.sleep(10)
