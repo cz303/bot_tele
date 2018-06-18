@@ -68,23 +68,23 @@ class YourBot(telepot.Bot):
             logging.info("Incoming message on public chat" + str(msg) + " time:" + str(datetime.now()))
         if content_type == 'text':
             if str(chat_id) in adminchatid:
-                if chat_id not in setmessage and chat_id not in viewstatic:
+                if str(chat_id) not in setmessage and str(chat_id) not in viewstatic:
                     if msg['text'] == 'Массовая рассылка':
                         bot.sendChatAction(chat_id, 'typing')
-                        setmessage.append(chat_id)
+                        setmessage.append(str(chat_id))
                         bot.sendMessage(chat_id, "Какое сообщение отправить?", reply_markup=stopmarkup)
                     elif msg['text'] == 'Статистика':
                         bot.sendChatAction(chat_id, 'typing')
-                        viewstatic.append(chat_id)
+                        viewstatic.append(str(chat_id))
                         bot.sendMessage(chat_id, "Смотрим статистику", reply_markup=staticmarkup)
-                if chat_id in setmessage:
+                if str(chat_id) in setmessage:
                     if msg['text'] == 'Хватит':
                         bot.sendChatAction(chat_id, 'typing')
-                        setmessage.remove(chat_id)
+                        setmessage.remove(str(chat_id))
                         bot.sendMessage(chat_id, "Всё закончил", reply_markup=helpmarkup)
                     elif msg['text'] != 'Массовая рассылка':
                         bot.sendChatAction(chat_id, 'typing')
-                        setmessage.remove(chat_id)
+                        setmessage.remove(str(chat_id))
                         k = 0
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
@@ -93,10 +93,10 @@ class YourBot(telepot.Bot):
                             k =+ 1
                         conn.close()
                         bot.sendMessage(chat_id, "Отправил *" + str(k) + "* сообщений, продолжим...", parse_mode='MARKDOWN', reply_markup=helpmarkup)
-                if chat_id in viewstatic:
+                if str(chat_id) in viewstatic:
                     if msg['text'] == 'Назад':
                         bot.sendChatAction(chat_id, 'typing')
-                        viewstatic.remove(chat_id)
+                        viewstatic.remove(str(chat_id))
                         bot.sendMessage(chat_id, "Вернулись", reply_markup=helpmarkup)
                     elif msg['text'] == 'Статистика сервера':
                         bot.sendChatAction(chat_id, 'typing')
@@ -144,7 +144,7 @@ class YourBot(telepot.Bot):
                         conn.close()
                         bot.sendMessage(chat_id, message, parse_mode='MARKDOWN')
             else:
-                if chat_id in userchatid:
+                if str(chat_id) in userchatid:
                     if msg['text'] == "Про нас":
                         bot.sendChatAction(chat_id, 'typing')
                         bot.sendMessage(chat_id,
@@ -194,7 +194,7 @@ class YourBot(telepot.Bot):
                         bot.sendMessage(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
                     elif msg['text'] == 'Подписка на бота':
                         bot.sendChatAction(chat_id, 'typing')
-                        userchatid.append(chat_id)
+                        userchatid.append(str(chat_id))
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         cursor.execute("update chats set status = 1 where chat_id = '" + (str(chat_id)) + "';")
