@@ -34,6 +34,17 @@ for row in cursor.execute("select chat_id from chats where is_admin = '1';"):
     adminchatid.append((row[0]))
 conn.close()
 
+def sendMsg(bot, chat_id, text = "Нет сообщения [Обратитесь к разработке]", parse = None,  markup=None):
+    bot.sendChatAction(chat_id, 'typing')
+    if markup and parse:
+        bot.sendMessage(chat_id, text, parse_mode = parse, reply_markup= markup, disable_web_page_preview=True )
+    elif markup and not parse:
+        bot.sendMessage(chat_id, text, reply_markup=markup, disable_web_page_preview=True)
+    elif not markup and parse:
+        bot.sendMessage(chat_id, text, parse_mode = parse, disable_web_page_preview=True)
+    else:
+        bot.sendMessage(chat_id, text)
+
 def clearall(chat_id):
     if chat_id in setmessage:
         setmessage.remove(chat_id)
@@ -62,9 +73,8 @@ class YourBot(telepot.Bot):
             if str(chat_id) in adminchatid:
                 if chat_id not in setmessage and chat_id not in viewstatic:
                     if msg['text'] == 'Массовая рассылка':
-                        bot.sendChatAction(chat_id, 'typing')
                         setmessage.append(chat_id)
-                        bot.sendMessage(chat_id, "Какое сообщение отправить?", reply_markup=stopmarkup)
+                        sendMsg(self, chat_id, "Какое сообщение отправить?", "stopmarkup")
                     elif msg['text'] == 'Статистика':
                         bot.sendChatAction(chat_id, 'typing')
                         viewstatic.append(chat_id)
