@@ -74,7 +74,7 @@ class YourBot(telepot.Bot):
                 if chat_id not in setmessage and chat_id not in viewstatic:
                     if msg['text'] == 'Массовая рассылка':
                         setmessage.append(chat_id)
-                        sendMsg(self, chat_id, "Какое сообщение отправить?", "stopmarkup")
+                        sendMsg(self, chat_id, "Какое сообщение отправить?", "", "stopmarkup")
                     elif msg['text'] == 'Статистика':
                         bot.sendChatAction(chat_id, 'typing')
                         viewstatic.append(chat_id)
