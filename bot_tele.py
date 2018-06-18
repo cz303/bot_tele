@@ -19,7 +19,7 @@ viewstatic = []
 adminchatid = []
 graphstart = datetime.now()
 
-stopmarkup = {'keyboard': [['Хватит']]}
+stopmarkup = {'keyboard': [['Хват  ит']]}
 helpmarkup = {'keyboard': [['Массовая рассылка'], ['Статистика']]}
 staticmarkup = {'keyboard': [['Статистика сервера'], ['Память на сервере'], ['Подписки на бота'], ['Назад']]}
 yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
