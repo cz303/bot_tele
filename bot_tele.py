@@ -34,6 +34,10 @@ conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
 for row in cursor.execute("select chat_id from chats where status = 2;"):
     adminchatid.append((row[0]))
+conn.close()
+
+conn = sqlite3.connect("mydatabase.db")
+cursor = conn.cursor()
 for row in cursor.execute("select chat_id from chats where status = 1;"):
     userchatid.append((row[0]))
 conn.close()
