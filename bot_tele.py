@@ -169,7 +169,7 @@ class YourBot(telepot.Bot):
                                 bot.sendDocument(chat_id, f)
                             except:
                                 bot.sendMessage(chat_id, 'Приношу свои изминения, у меня нет актуального прайса! \n'
-                                                         'Но не переживайте, я уже предупредил админисратора!')
+                                                         'Но не переживайте, я уже предупредил администратора!')
                                 for admin_chat_id in adminchatid:
                                     try:
                                         bot.sendChatAction(admin_chat_id, 'typing')
