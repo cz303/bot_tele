@@ -39,8 +39,7 @@ elementmarkup_reg_soc = {'inline_keyboard': [[{"text": "Instagram", "url": "http
                          }
 elementmarkup_unreg_soc = {'inline_keyboard': [[{"text": "Instagram", "url": "https://www.instagram.com/element_show/"}],
                                          [{"text": "ВКонтакте", "url": "https://vk.com/club92907131"}],
-                     [{"text": "Официальный сайт", "url": "http://deliriumshow.com/"}]],
-                         'keyboard': [['Про нас'], ['Подписка на бота']]
+                     [{"text": "Официальный сайт", "url": "http://deliriumshow.com/"}]]
                          }
 hide_keyboard = {'hide_keyboard': True}
 
