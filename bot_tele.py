@@ -158,8 +158,11 @@ class YourBot(telepot.Bot):
                     if str(chat_id) in inlk:
                         if msg['text'] == "Заказать прайслист":
                             bot.sendChatAction(chat_id, 'typing')
-                            f = open('/etc/list.xml', 'rb')
-                            bot.sendDocument(chat_id, f)
+                            f = open('/root/bot_tele/etc/list.xml', 'rb')
+                            if f:
+                                bot.sendDocument(chat_id, f)
+                            else:
+                                bot.sendMessage(chat_id, 'Нет Файла!')
                         # for admin_chat_id in adminchatid:
                         #    try:
                         #        bot.sendChatAction(admin_chat_id, 'typing')
