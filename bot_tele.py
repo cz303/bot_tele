@@ -31,16 +31,9 @@ elementmarkup_unreg = {'keyboard': [['Про нас'], ['Подписка на �
 elementmarkup_reg = {'keyboard': [['Про нас'], ['Личный кабинет'],
                                   ['Proxy для любимого клиента'], ['Отписаться от бота']]}
 elementmarkup_lk = {'keyboard': [['Заказать прайслист'], ['Назад']]}
-elementmarkup_reg_soc = {'inline_keyboard': [[{"text": "Instagram", "url": "https://www.instagram.com/element_show/"}],
+elementmarkup_soc = {'inline_keyboard': [[{"text": "Instagram", "url": "https://www.instagram.com/element_show/"}],
                                          [{"text": "ВКонтакте", "url": "https://vk.com/club92907131"}],
-                     [{"text": "Официальный сайт", "url": "http://deliriumshow.com/"}]],
-                         'keyboard': [['Про нас'], ['Личный кабинет'],
-                                      ['Proxy для любимого клиента'], ['Отписаться от бота']]
-                         }
-elementmarkup_unreg_soc = {'inline_keyboard': [[{"text": "Instagram", "url": "https://www.instagram.com/element_show/"}],
-                                         [{"text": "ВКонтакте", "url": "https://vk.com/club92907131"}],
-                     [{"text": "Официальный сайт", "url": "http://deliriumshow.com/"}]]
-                         }
+                     [{"text": "Официальный сайт", "url": "http://deliriumshow.com/"}]]}
 hide_keyboard = {'hide_keyboard': True}
 
 conn = sqlite3.connect("mydatabase.db")
@@ -200,7 +193,7 @@ class YourBot(telepot.Bot):
                                             "ра\n 🔦   Проекционное шоу\n🚨    Пиксельное шоу\n🎀    Шоу гимнасто"
                                             "к\n🔮    Контактное жонглирование\n🎪    Ходулисты, мимы, жонглеры, леди"
                                             "-фуршет, живые статуи",
-                                            reply_markup=elementmarkup_reg_soc)
+                                            reply_markup=elementmarkup_soc)
                         elif msg['text'] == "Proxy для любимого клиента":
                             bot.sendChatAction(chat_id, 'typing')
                             bot.sendMessage(chat_id,
@@ -272,7 +265,7 @@ class YourBot(telepot.Bot):
                                         "еское шоу\n 💨   Шоу Ветра\n 🔦   Проекционное шоу\n🚨    Пиксел"
                                         "ьное шоу\n🎀    Шоу гимнасток\n🔮    Контактное жонглирование\n🎪    Ходули"
                                         "сты, мимы, жонглеры, леди-фуршет, живые статуи",
-                                        reply_markup=elementmarkup_unreg_soc)
+                                        reply_markup=elementmarkup_soc)
 
 TOKEN = telegrambot
 bot = YourBot(TOKEN)
