@@ -28,7 +28,8 @@ staticmarkup = {'keyboard': [['Статистика сервера'], ['Подп
 yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
 yn_only_markup = {'keyboard': [['Да'], ['Нет']]}
 elementmarkup_unreg = {'keyboard': [['Про нас'], ['Социальные сети'], ['Подписка на бота']]}
-elementmarkup_reg = {'keyboard': [['Про нас'], ['Социальные сети'], ['Личный кабинет'], ['Proxy для любимого клиента'], ['Отписаться от бота']]}
+elementmarkup_reg = {'keyboard': [['Про нас'], ['Социальные сети'], ['Личный кабинет'],
+                                  ['Proxy для любимого клиента'], ['Отписаться от бота']]}
 elementmarkup_lk = {'keyboard': [['Заказать прайслист'], ['Назад']]}
 soc_elementmarkup = {'keyboard': [['Instagram'], ['VK'], ['Официальный сайт'], ['Назад']]}
 hide_keyboard = {'hide_keyboard': True}
@@ -99,10 +100,13 @@ class YourBot(telepot.Bot):
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         for row in cursor.execute("select chat_id, name from chats where status = 1"):
-                            bot.sendMessage(row[0], hello(row[1]) + "\n\n" + msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
+                            bot.sendMessage(row[0], hello(row[1]) + "\n\n" + msg['text'],
+                                            parse_mode='MARKDOWN', disable_web_page_preview=True)
                             k = k + 1
                         conn.close()
-                        bot.sendMessage(chat_id, "Отправил *" + str(k) + "* сообщений, продолжим...", parse_mode='MARKDOWN', reply_markup=helpmarkup)
+                        bot.sendMessage(chat_id, "Отправил *" + str(k) + "* сообщений, "
+                                                                         "продолжим...",
+                                        parse_mode='MARKDOWN', reply_markup=helpmarkup)
                 if str(chat_id) in viewstatic:
                     if msg['text'] == 'Назад':
                         bot.sendChatAction(chat_id, 'typing')
@@ -149,7 +153,9 @@ class YourBot(telepot.Bot):
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         for row in cursor.execute(
-                                "select (case when status = 0 then 'Пользователей' when status = 1 then 'Зарегистрированных пользователей' else 'Администраторов' end) as label,count(chat_id) from chats group by label;"):
+                                "select (case when status = 0 then 'Пользователей' "
+                                "when status = 1 then 'Зарегистрированных пользователей' "
+                                "else 'Администраторов' end) as label,count(chat_id) from chats group by label;"):
                             message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
                         conn.close()
                         bot.sendMessage(chat_id, message, parse_mode='MARKDOWN')
@@ -158,18 +164,19 @@ class YourBot(telepot.Bot):
                     if str(chat_id) in inlk:
                         if msg['text'] == "Заказать прайслист":
                             bot.sendChatAction(chat_id, 'typing')
-                            f = open('/root/bot_tele/etc/list.xml', 'rb')
+                            f = open('/root/bot_tele/etc/list.xml', 'rb', )
                             if f:
                                 bot.sendDocument(chat_id, f)
                             else:
-                                bot.sendMessage(chat_id, 'Нет Файла!')
-                        # for admin_chat_id in adminchatid:
-                        #    try:
-                        #        bot.sendChatAction(admin_chat_id, 'typing')
-                        #        bot.sendMessage(admin_chat_id, "Наш любимый клиент просит прислать ему прайс!")
-                        #        bot.forwardMessage(admin_chat_id, chat_id, msg['message_id'])
-                        #    except:
-                        #        print("Хм-м")
+                                bot.sendMessage(chat_id, 'Приношу свои изминения, у меня нет актуального прайса! \n'
+                                                         'Но не переживайте, я уже предупредил админисратора!')
+                                for admin_chat_id in adminchatid:
+                                    try:
+                                        bot.sendChatAction(admin_chat_id, 'typing')
+                                        bot.sendMessage(admin_chat_id, "Клиент запросил прайс, а файла у бота нет")
+                                        bot.forwardMessage(admin_chat_id, chat_id, msg['message_id'])
+                                    except:
+                                        print("Хм-м")
                         if msg['text'] == 'Назад':
                             bot.sendChatAction(chat_id, 'typing')
                             inlk.remove(str(chat_id))
@@ -178,11 +185,17 @@ class YourBot(telepot.Bot):
                         if msg['text'] == "Про нас":
                             bot.sendChatAction(chat_id, 'typing')
                             bot.sendMessage(chat_id,
-                                            "Арт-лаборатория ELEMENT\n\nПрофессиональные шоу программы и анимация на любое торжество. Оригинальные, яркие, запоминающиеся!\n\n🔥    Огненное шоу\n💡    Светодиодное шоу\n ⚡️   Электрическое шоу\n 💨   Шоу Ветра\n 🔦   Проекционное шоу\n🚨    Пиксельное шоу\n🎀    Шоу гимнасток\n🔮    Контактное жонглирование\n🎪    Ходулисты, мимы, жонглеры, леди-фуршет, живые статуи",
+                                            "Арт-лаборатория ELEMENT\n\nПрофессиональные шоу программы и анимация на"
+                                            " любое торжество. Оригинальные, яркие, запоминающиеся!\n\n🔥    Огненное "
+                                            "шоу\n💡    Светодиодное шоу\n ⚡️   Электрическое шоу\n 💨   Шоу Вет"
+                                            "ра\n 🔦   Проекционное шоу\n🚨    Пиксельное шоу\n🎀    Шоу гимнасто"
+                                            "к\n🔮    Контактное жонглирование\n🎪    Ходулисты, мимы, жонглеры, леди"
+                                            "-фуршет, живые статуи",
                                             reply_markup=elementmarkup_reg)
                         elif msg['text'] == "Социальные сети":
                             bot.sendChatAction(chat_id, 'typing')
-                            bot.sendMessage(chat_id, "Социальные сети Арт-лаборатории ELEMENT", reply_markup=soc_elementmarkup)
+                            bot.sendMessage(chat_id, "Социальные сети Арт-лаборатории ELEMENT",
+                                            reply_markup=soc_elementmarkup)
                         elif msg['text'] == "Instagram":
                             bot.sendChatAction(chat_id, 'typing')
                             bot.sendMessage(chat_id, "[Instagram](https://www.instagram.com/element_show/)",
@@ -193,7 +206,8 @@ class YourBot(telepot.Bot):
                                             disable_web_page_preview=True)
                         elif msg['text'] == "Официальный сайт":
                             bot.sendChatAction(chat_id, 'typing')
-                            bot.sendMessage(chat_id, "[Официальный сайт](http://deliriumshow.com/)", parse_mode='MARKDOWN',
+                            bot.sendMessage(chat_id, "[Официальный сайт](http://deliriumshow.com/)",
+                                            parse_mode='MARKDOWN',
                                             disable_web_page_preview=True)
                         elif msg['text'] == "Назад":
                             bot.sendChatAction(chat_id, 'typing')
@@ -201,7 +215,8 @@ class YourBot(telepot.Bot):
                         elif msg['text'] == "Proxy для любимого клиента":
                             bot.sendChatAction(chat_id, 'typing')
                             bot.sendMessage(chat_id,
-                                            "[Настройка Proxy](https://t.me/socks?server=195.201.136.255&port=1080&user=element_89179024466&pass=*****)",
+                                            "[Настройка Proxy](https://t.me/socks?server=195.201.136.255&"
+                                            "port=1080&user=element_89179024466&pass=*****)",
                                             parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
                         elif msg['text'] == 'Отписаться от бота':
                             bot.sendChatAction(chat_id, 'typing')
@@ -215,7 +230,10 @@ class YourBot(telepot.Bot):
                                 name = msg['chat']['id']
                             conn = sqlite3.connect("mydatabase.db")
                             cursor = conn.cursor()
-                            cursor.execute("update chats set status = 0, name = '" + name + "' where chat_id = '" + (str(chat_id)) + "';")
+                            cursor.execute("update chats set status = 0, name = '" + name + "' "
+                                                                                            "where "
+                                                                                            "chat_id = '"
+                                                                                            "" + (str(chat_id)) + "';")
                             conn.commit()
                             conn.close()
                             bot.sendMessage(chat_id, "Спасибо, что были с нами!",
@@ -246,7 +264,8 @@ class YourBot(telepot.Bot):
                                 name = msg['chat']['id']
                             conn = sqlite3.connect("mydatabase.db")
                             cursor = conn.cursor()
-                            cursor.execute("update chats set status = 1, name = '" + name + "' where chat_id = '" + (str(chat_id)) + "';")
+                            cursor.execute("update chats set status = 1, "
+                                           "name = '" + name + "' where chat_id = '" + (str(chat_id)) + "';")
                             conn.commit()
                             conn.close()
                             bot.sendMessage(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
@@ -257,11 +276,18 @@ class YourBot(telepot.Bot):
                     elif msg['text'] == "Про нас":
                         bot.sendChatAction(chat_id, 'typing')
                         bot.sendMessage(chat_id,
-                                        "Арт-лаборатория ELEMENT\n\nПрофессиональные шоу программы и анимация на любое торжество. Оригинальные, яркие, запоминающиеся!\n\n🔥    Огненное шоу\n💡    Светодиодное шоу\n ⚡️   Электрическое шоу\n 💨   Шоу Ветра\n 🔦   Проекционное шоу\n🚨    Пиксельное шоу\n🎀    Шоу гимнасток\n🔮    Контактное жонглирование\n🎪    Ходулисты, мимы, жонглеры, леди-фуршет, живые статуи",
+                                        "Арт-лаборатория ELEMENT\n\nПрофессиональные "
+                                        "шоу программы и анимация на любое торжество. "
+                                        "Оригинальные, яркие, запоминающиеся!\n\n🔥    "
+                                        "Огненное шоу\n💡    Светодиодное шоу\n ⚡️   Электрич"
+                                        "еское шоу\n 💨   Шоу Ветра\n 🔦   Проекционное шоу\n🚨    Пиксел"
+                                        "ьное шоу\n🎀    Шоу гимнасток\n🔮    Контактное жонглирование\n🎪    Ходули"
+                                        "сты, мимы, жонглеры, леди-фуршет, живые статуи",
                                         reply_markup=elementmarkup_unreg)
                     elif msg['text'] == "Социальные сети":
                         bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "Социальные сети Арт-лаборатории ELEMENT", reply_markup=soc_elementmarkup)
+                        bot.sendMessage(chat_id, "Социальные сети Арт-лаборатории ELEMENT",
+                                        reply_markup=soc_elementmarkup)
                     elif msg['text'] == "Instagram":
                         bot.sendChatAction(chat_id, 'typing')
                         bot.sendMessage(chat_id, "[Instagram](https://www.instagram.com/element_show/)",
