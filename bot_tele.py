@@ -27,7 +27,7 @@ staticmarkup = {'keyboard': [['Статистика сервера'], ['Подп
 yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
 yn_only_markup = {'keyboard': [['Да'], ['Нет']]}
 elementmarkup_unreg = {'keyboard': [['Про нас'], ['Социальные сети'], ['Подписка на бота']]}
-elementmarkup_reg = {'keyboard': [['Про нас'], ['Социальные сети'], ['Личный кабинет'], ['Proxy для любимого клиента']]}
+elementmarkup_reg = {'keyboard': [['Про нас'], ['Социальные сети'], ['Личный кабинет'], ['Proxy для любимого клиента'], ['Отписаться от бота']]}
 soc_elementmarkup = {'keyboard': [['Instagram'], ['VK'], ['Официальный сайт'], ['Назад']]}
 hide_keyboard = {'hide_keyboard': True}
 
@@ -97,7 +97,7 @@ class YourBot(telepot.Bot):
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         for row in cursor.execute("select chat_id, name from chats where status = 1"):
-                            bot.sendMessage(row[0], hello(row[1]) + "\n" + msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
+                            bot.sendMessage(row[0], hello(row[1]) + "\n\n" + msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
                             k =+ 1
                         conn.close()
                         bot.sendMessage(chat_id, "Отправил *" + str(k) + "* сообщений, продолжим...", parse_mode='MARKDOWN', reply_markup=helpmarkup)
@@ -191,6 +191,26 @@ class YourBot(telepot.Bot):
                         bot.sendMessage(chat_id,
                                         "[Настройка Proxy](https://t.me/socks?server=195.201.136.255&port=1080&user=element_89179024466&pass=*****)",
                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
+                    elif msg['text'] == 'Отписаться от бота':
+                        bot.sendChatAction(chat_id, 'typing')
+                        userchatid.remove(str(chat_id))
+                        name = ""
+                        if msg['chat']['first_name']:
+                            name = msg['chat']['first_name']
+                        elif msg['chat']['username']:
+                            name = msg['chat']['username']
+                        else:
+                            name = msg['chat']['id']
+                        conn = sqlite3.connect("mydatabase.db")
+                        cursor = conn.cursor()
+                        cursor.execute("update chats set status = 0, name = '" + name + "' where chat_id = '" + (str(chat_id)) + "';")
+                        conn.commit()
+                        conn.close()
+                        bot.sendMessage(chat_id, "Спасибо, что были с нами!",
+                                        reply_markup=elementmarkup_unreg)
+                    elif msg['text'] == "Личный кабинет":
+                        bot.sendChatAction(chat_id, 'typing')
+                        bot.sendMessage(chat_id, "В работе")
                 else:
                     if msg['text'] == '/start':
                         bot.sendChatAction(chat_id, 'typing')
@@ -204,8 +224,6 @@ class YourBot(telepot.Bot):
                         bot.sendChatAction(chat_id, 'typing')
                         if msg['chat']['type'] == 'private':
                             userchatid.append(str(chat_id))
-                            conn = sqlite3.connect("mydatabase.db")
-                            cursor = conn.cursor()
                             name = ""
                             if msg['chat']['first_name']:
                                 name = msg['chat']['first_name']
@@ -213,6 +231,8 @@ class YourBot(telepot.Bot):
                                 name = msg['chat']['username']
                             else:
                                 name = msg['chat']['id']
+                            conn = sqlite3.connect("mydatabase.db")
+                            cursor = conn.cursor()
                             cursor.execute("update chats set status = 1, name = '" + name + "' where chat_id = '" + (str(chat_id)) + "';")
                             conn.commit()
                             conn.close()
