@@ -222,6 +222,7 @@ class YourBot(telepot.Bot):
                                             reply_markup=elementmarkup_unreg)
                         elif msg['text'] == "Личный кабинет":
                             bot.sendChatAction(chat_id, 'typing')
+                            inlk.append(chat_id)
                             bot.sendMessage(chat_id, "Ваш личный кабинет", reply_markup=elementmarkup_lk)
                 else:
                     if msg['text'] == '/start':
