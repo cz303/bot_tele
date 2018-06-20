@@ -16,6 +16,7 @@ logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
 
 setmessage = []
 viewstatic = []
+inlk = []
 
 userchatid = []
 adminchatid = []
@@ -28,6 +29,7 @@ yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
 yn_only_markup = {'keyboard': [['Да'], ['Нет']]}
 elementmarkup_unreg = {'keyboard': [['Про нас'], ['Социальные сети'], ['Подписка на бота']]}
 elementmarkup_reg = {'keyboard': [['Про нас'], ['Социальные сети'], ['Личный кабинет'], ['Proxy для любимого клиента'], ['Отписаться от бота']]}
+elementmarkup_lk = {'keyboard': [['Заказать прайслист'], ['Назад']]}
 soc_elementmarkup = {'keyboard': [['Instagram'], ['VK'], ['Официальный сайт'], ['Назад']]}
 hide_keyboard = {'hide_keyboard': True}
 
@@ -153,64 +155,70 @@ class YourBot(telepot.Bot):
                         bot.sendMessage(chat_id, message, parse_mode='MARKDOWN')
             else:
                 if str(chat_id) in userchatid:
-                    if msg['text'] == "Про нас":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id,
-                                        "Арт-лаборатория ELEMENT\n\nПрофессиональные шоу программы и анимация на любое торжество. Оригинальные, яркие, запоминающиеся!\n\n🔥    Огненное шоу\n💡    Светодиодное шоу\n ⚡️   Электрическое шоу\n 💨   Шоу Ветра\n 🔦   Проекционное шоу\n🚨    Пиксельное шоу\n🎀    Шоу гимнасток\n🔮    Контактное жонглирование\n🎪    Ходулисты, мимы, жонглеры, леди-фуршет, живые статуи",
-                                        reply_markup=elementmarkup_reg)
-                    elif msg['text'] == "Социальные сети":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "Социальные сети Арт-лаборатории ELEMENT", reply_markup=soc_elementmarkup)
-                    elif msg['text'] == "Instagram":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "[Instagram](https://www.instagram.com/element_show/)",
-                                        parse_mode='MARKDOWN', disable_web_page_preview=True)
-                    elif msg['text'] == "VK":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "[ВКонтакте](https://vk.com/club92907131)", parse_mode='MARKDOWN',
-                                        disable_web_page_preview=True)
-                    elif msg['text'] == "Официальный сайт":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "[Официальный сайт](http://deliriumshow.com/)", parse_mode='MARKDOWN',
-                                        disable_web_page_preview=True)
-                    elif msg['text'] == "Назад":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
-                    elif msg['text'] == "Заказать прайслист":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "Мы обязательно с Вами свяжемся", reply_markup=elementmarkup_reg)
-                        for admin_chat_id in adminchatid:
-                            try:
-                                bot.sendChatAction(admin_chat_id, 'typing')
-                                bot.sendMessage(admin_chat_id, "Наш любимый клиент просит прислать ему прайс!")
-                                bot.forwardMessage(admin_chat_id, chat_id, msg['message_id'])
-                            except:
-                                print("Хм-м")
-                    elif msg['text'] == "Proxy для любимого клиента":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id,
-                                        "[Настройка Proxy](https://t.me/socks?server=195.201.136.255&port=1080&user=element_89179024466&pass=*****)",
-                                        parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
-                    elif msg['text'] == 'Отписаться от бота':
-                        bot.sendChatAction(chat_id, 'typing')
-                        userchatid.remove(str(chat_id))
-                        name = ""
-                        if msg['chat']['first_name']:
-                            name = msg['chat']['first_name']
-                        elif msg['chat']['username']:
-                            name = msg['chat']['username']
-                        else:
-                            name = msg['chat']['id']
-                        conn = sqlite3.connect("mydatabase.db")
-                        cursor = conn.cursor()
-                        cursor.execute("update chats set status = 0, name = '" + name + "' where chat_id = '" + (str(chat_id)) + "';")
-                        conn.commit()
-                        conn.close()
-                        bot.sendMessage(chat_id, "Спасибо, что были с нами!",
-                                        reply_markup=elementmarkup_unreg)
-                    elif msg['text'] == "Личный кабинет":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "В работе")
+                    if str(chat_id) in inlk:
+                        if msg['text'] == "Заказать прайслист":
+                            bot.sendChatAction(chat_id, 'typing')
+                            bot.sendDocument(chat_id, open("etc/list.xml", "r"))
+                        # for admin_chat_id in adminchatid:
+                        #    try:
+                        #        bot.sendChatAction(admin_chat_id, 'typing')
+                        #        bot.sendMessage(admin_chat_id, "Наш любимый клиент просит прислать ему прайс!")
+                        #        bot.forwardMessage(admin_chat_id, chat_id, msg['message_id'])
+                        #    except:
+                        #        print("Хм-м")
+                        if msg['text'] == 'Назад':
+                            bot.sendChatAction(chat_id, 'typing')
+                            inlk.remove(str(chat_id))
+                            bot.sendMessage(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
+                    else:
+                        if msg['text'] == "Про нас":
+                            bot.sendChatAction(chat_id, 'typing')
+                            bot.sendMessage(chat_id,
+                                            "Арт-лаборатория ELEMENT\n\nПрофессиональные шоу программы и анимация на любое торжество. Оригинальные, яркие, запоминающиеся!\n\n🔥    Огненное шоу\n💡    Светодиодное шоу\n ⚡️   Электрическое шоу\n 💨   Шоу Ветра\n 🔦   Проекционное шоу\n🚨    Пиксельное шоу\n🎀    Шоу гимнасток\n🔮    Контактное жонглирование\n🎪    Ходулисты, мимы, жонглеры, леди-фуршет, живые статуи",
+                                            reply_markup=elementmarkup_reg)
+                        elif msg['text'] == "Социальные сети":
+                            bot.sendChatAction(chat_id, 'typing')
+                            bot.sendMessage(chat_id, "Социальные сети Арт-лаборатории ELEMENT", reply_markup=soc_elementmarkup)
+                        elif msg['text'] == "Instagram":
+                            bot.sendChatAction(chat_id, 'typing')
+                            bot.sendMessage(chat_id, "[Instagram](https://www.instagram.com/element_show/)",
+                                            parse_mode='MARKDOWN', disable_web_page_preview=True)
+                        elif msg['text'] == "VK":
+                            bot.sendChatAction(chat_id, 'typing')
+                            bot.sendMessage(chat_id, "[ВКонтакте](https://vk.com/club92907131)", parse_mode='MARKDOWN',
+                                            disable_web_page_preview=True)
+                        elif msg['text'] == "Официальный сайт":
+                            bot.sendChatAction(chat_id, 'typing')
+                            bot.sendMessage(chat_id, "[Официальный сайт](http://deliriumshow.com/)", parse_mode='MARKDOWN',
+                                            disable_web_page_preview=True)
+                        elif msg['text'] == "Назад":
+                            bot.sendChatAction(chat_id, 'typing')
+                            bot.sendMessage(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
+                        elif msg['text'] == "Proxy для любимого клиента":
+                            bot.sendChatAction(chat_id, 'typing')
+                            bot.sendMessage(chat_id,
+                                            "[Настройка Proxy](https://t.me/socks?server=195.201.136.255&port=1080&user=element_89179024466&pass=*****)",
+                                            parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
+                        elif msg['text'] == 'Отписаться от бота':
+                            bot.sendChatAction(chat_id, 'typing')
+                            userchatid.remove(str(chat_id))
+                            name = ""
+                            if msg['chat']['first_name']:
+                                name = msg['chat']['first_name']
+                            elif msg['chat']['username']:
+                                name = msg['chat']['username']
+                            else:
+                                name = msg['chat']['id']
+                            conn = sqlite3.connect("mydatabase.db")
+                            cursor = conn.cursor()
+                            cursor.execute("update chats set status = 0, name = '" + name + "' where chat_id = '" + (str(chat_id)) + "';")
+                            conn.commit()
+                            conn.close()
+                            bot.sendMessage(chat_id, "Спасибо, что были с нами!",
+                                            reply_markup=elementmarkup_unreg)
+                        elif msg['text'] == "Личный кабинет":
+                            bot.sendChatAction(chat_id, 'typing')
+                            bot.sendMessage(chat_id, "В работе")
                 else:
                     if msg['text'] == '/start':
                         bot.sendChatAction(chat_id, 'typing')
