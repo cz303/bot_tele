@@ -57,7 +57,7 @@ def RepresentsInt(s):
         return False
 
 def hello(name):
-    phrase = ['Привет, ', 'Добрый день, ', 'Здравствуйте, ']
+    phrase = ['Привет, ', 'Добрый день, ', 'Здравствуйте, ', 'Аллоха, ']
     i = random.randint(0,2)
     result = phrase[i] + name +"!"
     return result
@@ -98,7 +98,7 @@ class YourBot(telepot.Bot):
                         cursor = conn.cursor()
                         for row in cursor.execute("select chat_id, name from chats where status = 1"):
                             bot.sendMessage(row[0], hello(row[1]) + "\n\n" + msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
-                            k =+ 1
+                            k = k + 1
                         conn.close()
                         bot.sendMessage(chat_id, "Отправил *" + str(k) + "* сообщений, продолжим...", parse_mode='MARKDOWN', reply_markup=helpmarkup)
                 if str(chat_id) in viewstatic:
