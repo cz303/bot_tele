@@ -22,8 +22,6 @@ userchatid = []
 adminchatid = []
 graphstart = datetime.now()
 
-#stopmarkup = {'inline_keyboard': [ [ {"text": "Yes", "url": "http://www.google.com/"}, {"text": "No", "url": "http://www.google.com/"} ] ]}
-
 stopmarkup = {'keyboard': [['Хватит']]}
 helpmarkup = {'keyboard': [['Массовая рассылка'], ['Статистика']]}
 staticmarkup = {'keyboard': [['Статистика сервера'], ['Подписки на бота'], ['Назад']]}
@@ -35,8 +33,6 @@ elementmarkup_reg = {'keyboard': [['Про нас'], ['Социальные се
 elementmarkup_lk = {'keyboard': [['Заказать прайслист'], ['Назад']]}
 soc_elementmarkup = {'inline_keyboard': [[{"text": "Instagram", "url": "https://www.instagram.com/element_show/"}],
                                          [{"text": "ВКонтакте", "url": "https://vk.com/club92907131"}],
-[{"text": "Тест", "callback_data": "callback_data",
-  "switch_inline_query": "switch_inline_query", "callback_game": "callback_game"}],
                      [{"text": "Официальный сайт", "url": "http://deliriumshow.com/"}]]}
 hide_keyboard = {'hide_keyboard': True}
 
