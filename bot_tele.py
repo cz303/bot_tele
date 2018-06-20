@@ -22,7 +22,7 @@ userchatid = []
 adminchatid = []
 graphstart = datetime.now()
 
-stopmarkup = {'inline_keyboard': {[["A"], ["B"], ["C"]]}}
+stopmarkup = {'inline_keyboard': [["A"], ["B"], ["C"]]}
 helpmarkup = {'keyboard': [['Массовая рассылка'], ['Статистика']]}
 staticmarkup = {'keyboard': [['Статистика сервера'], ['Подписки на бота'], ['Назад']]}
 yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
