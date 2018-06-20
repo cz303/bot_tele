@@ -59,7 +59,7 @@ def RepresentsInt(s):
 def hello(name):
     phrase = ['Привет, ', 'Добрый день, ', 'Здравствуйте, ']
     i = random.randint(0,2)
-    result = phrase[i] + name
+    result = phrase[i] + name +"!"
     return result
 
 
@@ -202,14 +202,25 @@ class YourBot(telepot.Bot):
                         bot.sendMessage(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
                     elif msg['text'] == 'Подписка на бота':
                         bot.sendChatAction(chat_id, 'typing')
-                        userchatid.append(str(chat_id))
-                        conn = sqlite3.connect("mydatabase.db")
-                        cursor = conn.cursor()
-                        cursor.execute("update chats set status = 1 where chat_id = '" + (str(chat_id)) + "';")
-                        conn.commit()
-                        conn.close()
-                        bot.sendMessage(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
-                                        reply_markup=elementmarkup_reg)
+                        if msg['chat']['type'] == 'private':
+                            userchatid.append(str(chat_id))
+                            conn = sqlite3.connect("mydatabase.db")
+                            cursor = conn.cursor()
+                            name = ""
+                            if msg['chat']['first_name']:
+                                name = msg['chat']['first_name']
+                            elif msg['chat']['username']:
+                                name = msg['chat']['username']
+                            else:
+                                name = msg['chat']['id']
+                            cursor.execute("update chats set status = 1, name = '" + name + "' where chat_id = '" + (str(chat_id)) + "';")
+                            conn.commit()
+                            conn.close()
+                            bot.sendMessage(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
+                                            reply_markup=elementmarkup_reg)
+                        else:
+                            bot.sendMessage(chat_id, "Только для личных чатов",
+                                            reply_markup=elementmarkup_unreg)
                     elif msg['text'] == "Про нас":
                         bot.sendChatAction(chat_id, 'typing')
                         bot.sendMessage(chat_id,
