@@ -35,6 +35,8 @@ elementmarkup_reg = {'keyboard': [['Про нас'], ['Социальные се
 elementmarkup_lk = {'keyboard': [['Заказать прайслист'], ['Назад']]}
 soc_elementmarkup = {'inline_keyboard': [[{"text": "Instagram", "url": "https://www.instagram.com/element_show/"}],
                                          [{"text": "ВКонтакте", "url": "https://vk.com/club92907131"}],
+[{"text": "Тест", "callback_data": "callback_data",
+  "switch_inline_query": "switch_inline_query", "callback_game": "callback_game"}],
                      [{"text": "Официальный сайт", "url": "http://deliriumshow.com/"}]]}
 hide_keyboard = {'hide_keyboard': True}
 
@@ -200,19 +202,6 @@ class YourBot(telepot.Bot):
                             bot.sendChatAction(chat_id, 'typing')
                             bot.sendMessage(chat_id, "Социальные сети Арт-лаборатории ELEMENT",
                                             reply_markup=soc_elementmarkup)
-                        elif msg['text'] == "Instagram":
-                            bot.sendChatAction(chat_id, 'typing')
-                            bot.sendMessage(chat_id, "[Instagram](https://www.instagram.com/element_show/)",
-                                            parse_mode='MARKDOWN', disable_web_page_preview=True)
-                        elif msg['text'] == "VK":
-                            bot.sendChatAction(chat_id, 'typing')
-                            bot.sendMessage(chat_id, "[ВКонтакте](https://vk.com/club92907131)", parse_mode='MARKDOWN',
-                                            disable_web_page_preview=True)
-                        elif msg['text'] == "Официальный сайт":
-                            bot.sendChatAction(chat_id, 'typing')
-                            bot.sendMessage(chat_id, "[Официальный сайт](http://deliriumshow.com/)",
-                                            parse_mode='MARKDOWN',
-                                            disable_web_page_preview=True)
                         elif msg['text'] == "Назад":
                             bot.sendChatAction(chat_id, 'typing')
                             bot.sendMessage(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
@@ -292,18 +281,6 @@ class YourBot(telepot.Bot):
                         bot.sendChatAction(chat_id, 'typing')
                         bot.sendMessage(chat_id, "Социальные сети Арт-лаборатории ELEMENT",
                                         reply_markup=soc_elementmarkup)
-                    elif msg['text'] == "Instagram":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "[Instagram](https://www.instagram.com/element_show/)",
-                                        parse_mode='MARKDOWN', disable_web_page_preview=True)
-                    elif msg['text'] == "VK":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "[ВКонтакте](https://vk.com/club92907131)", parse_mode='MARKDOWN',
-                                        disable_web_page_preview=True)
-                    elif msg['text'] == "Официальный сайт":
-                        bot.sendChatAction(chat_id, 'typing')
-                        bot.sendMessage(chat_id, "[Официальный сайт](http://deliriumshow.com/)", parse_mode='MARKDOWN',
-                                        disable_web_page_preview=True)
                     elif msg['text'] == "Назад":
                         bot.sendChatAction(chat_id, 'typing')
                         bot.sendMessage(chat_id, "Вернулись", reply_markup=elementmarkup_unreg)
