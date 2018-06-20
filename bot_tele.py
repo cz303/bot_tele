@@ -10,6 +10,7 @@ import time
 import telepot
 import sqlite3
 import logging
+import random
 
 logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
 
@@ -55,6 +56,13 @@ def RepresentsInt(s):
     except ValueError:
         return False
 
+def hello(name):
+    phrase = ['Привет, ', 'Добрый день, ', 'Здравствуйте, ']
+    i = random.randint(0,2)
+    result = phrase[i] + name
+    return result
+
+
 class YourBot(telepot.Bot):
     def __init__(self, *args, **kwargs):
         super(YourBot, self).__init__(*args, **kwargs)
@@ -89,7 +97,7 @@ class YourBot(telepot.Bot):
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         for row in cursor.execute("select chat_id from chats where status = 1"):
-                            bot.sendMessage(row[0], msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
+                            bot.sendMessage(row[0], hello('Name') + "\n" + msg['text'], parse_mode='MARKDOWN', disable_web_page_preview=True)
                             k =+ 1
                         conn.close()
                         bot.sendMessage(chat_id, "Отправил *" + str(k) + "* сообщений, продолжим...", parse_mode='MARKDOWN', reply_markup=helpmarkup)
