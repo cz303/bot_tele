@@ -188,7 +188,7 @@ def echo_message(message):
                             memuseperc + "\n" + \
                             diskused + "\n\n" + \
                             pidsreply
-                    bot.sendMessage(chat_id, reply, disable_web_page_preview=True)
+                    bot.send_message(chat_id, reply, disable_web_page_preview=True)
                 elif text == 'Подписки на бота':
                     message = '*На меня подписано:*\n'
                     conn = sqlite3.connect("mydatabase.db")
@@ -365,6 +365,6 @@ def less_day(call):
 
 
 for admin_chat_id in adminchatid:
-    bot.sendChatAction(admin_chat_id, 'typing')
-    bot.sendMessage(admin_chat_id, "Я запущен!", reply_markup=adminmarkup)
+    bot.send_chat_action(admin_chat_id, 'typing')
+    bot.send_message(admin_chat_id, "Я запущен!", reply_markup=adminmarkup)
 bot.polling()
