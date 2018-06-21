@@ -25,7 +25,7 @@ def get_day(call):
     if(saved_date is not None):
         day=call.data[13:]
         date = datetime.datetime(int(saved_date[0]),int(saved_date[1]),int(day))
-        bot.send_message(chat_id, str(date.strftime("%d.%M.%Y")))
+        bot.send_message(chat_id, str(date.strftime("%d.%m.%Y")))
         bot.answer_callback_query(call.id, text="")
 
     else:
