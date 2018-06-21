@@ -4,8 +4,8 @@ conn = sqlite3.connect("mydatabase.db") # или :memory: чтобы сохра�
 cursor = conn.cursor()
  
 # Создание таблицы "Чаты"
-cursor.execute("DROP TABLE chats;")
-cursor.execute("CREATE TABLE chats(chat_id real, name text DEFAULT 'Your name', status INTEGER DEFAULT 0, UNIQUE(chat_id) );")
+#cursor.execute("DROP TABLE chats;")
+#cursor.execute("CREATE TABLE chats(chat_id real, name text DEFAULT 'Your name', status INTEGER DEFAULT 0, UNIQUE(chat_id) );")
 #моя личка chat_id = '109099327'
 #cursor.execute("UPDATE chats SET status = 2 where chat_id = -241874218;")
 
