@@ -141,7 +141,7 @@ def echo_message(message):
                     cursor = conn.cursor()
                     for row in cursor.execute("select chat_id, name from chats where status = 1"):
                         bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
-                                         parse_mode='MARKDOWN', disable_web_page_preview=True, markup=likemarkup)
+                                         parse_mode='MARKDOWN', disable_web_page_preview=True, reply_markup=likemarkup)
                         k = k + 1
                     conn.close()
                     bot.send_message(chat_id, "Отправил *" + str(k) + "* сообщений, "
