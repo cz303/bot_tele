@@ -8,6 +8,7 @@ import random
 import logging
 from datetime import datetime
 import sqlite3
+from telebot import types
 
 logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
 
@@ -19,12 +20,16 @@ userchatid = []
 adminchatid = []
 graphstart = datetime.now()
 
-stopmarkup = {'keyboard': [['Хватит']]}
+stopmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+stopmarkup.add('Хватит')
+
+elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+elementmarkup_unreg.add('Про нас', 'Подписка на бота')
+
 helpmarkup = {'keyboard': [['Массовая рассылка'], ['Статистика']]}
 staticmarkup = {'keyboard': [['Статистика сервера'], ['Подписки на бота'], ['Назад']]}
 yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
 yn_only_markup = {'keyboard': [['Да'], ['Нет']]}
-elementmarkup_unreg = {'keyboard': [['Про нас'], ['Подписка на бота']]}
 elementmarkup_reg = {'keyboard': [['Про нас'], ['Личный кабинет'],
                                   ['Proxy для любимого клиента'], ['Отписаться от бота']]}
 elementmarkup_lk = {'keyboard': [['Заказать прайслист'], ['Назад']]}
