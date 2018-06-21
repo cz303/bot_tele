@@ -349,8 +349,8 @@ def less_day(call):
 def less_day(call):
     bot.answer_callback_query(call.id, text="Отправка отменена")
     try:
-        if call.message.from.username:
-            text = "Отправка массовой рассылки отменена. Пользователем: *[" + call.message.from.first_name + "](https://t.me/" + call.message.from.username + ")*"
+        if call.message.from_user.username:
+            text = "Отправка массовой рассылки отменена. Пользователем: *[" + call.message.from_user.first_name + "](https://t.me/" + call.message.from_user.username + ")*"
         else:
             text = "Отправка массовой рассылки отменена"
         bot.edit_message_text(text, call.message.chat.id,
