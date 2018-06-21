@@ -91,33 +91,33 @@ def echo_message(message):
             if chat_id not in setmessage and chat_id not in viewstatic:
                 if text == 'Массовая рассылка':
                     setmessage.append(chat_id)
-                    bot.sendMessage(chat_id, "Какое сообщение отправить?", reply_markup=stopmarkup)
+                    bot.send_message(chat_id, "Какое сообщение отправить?", reply_markup=stopmarkup)
                 elif text == 'Статистика':
                     viewstatic.append(chat_id)
-                    bot.sendMessage(chat_id, "Смотрим статистику", reply_markup=staticmarkup)
+                    bot.send_message(chat_id, "Смотрим статистику", reply_markup=staticmarkup)
             if chat_id in setmessage:
                 if text == 'Хватит':
                     setmessage.remove(chat_id)
-                    bot.sendMessage(chat_id, "Всё закончил", reply_markup=helpmarkup)
+                    bot.send_message(chat_id, "Всё закончил", reply_markup=helpmarkup)
                 elif text != 'Массовая рассылка':
                     setmessage.remove(chat_id)
                     k = 0
                     conn = sqlite3.connect("mydatabase.db")
                     cursor = conn.cursor()
                     for row in cursor.execute("select chat_id, name from chats where status = 1"):
-                        bot.sendMessage(row[0], hello(row[1]) + "\n\n" + msg['text'],
+                        bot.send_message(row[0], hello(row[1]) + "\n\n" + msg['text'],
                                         parse_mode='MARKDOWN', disable_web_page_preview=True)
                         k = k + 1
                     conn.close()
-                    bot.sendMessage(chat_id, "Отправил *" + str(k) + "* сообщений, "
+                    bot.send_message(chat_id, "Отправил *" + str(k) + "* сообщений, "
                                                                      "продолжим...",
                                     parse_mode='MARKDOWN', reply_markup=helpmarkup)
             if chat_id in viewstatic:
                 if text == 'Назад':
                     viewstatic.remove(chat_id)
-                    bot.sendMessage(chat_id, "Вернулись", reply_markup=helpmarkup)
+                    bot.send_message(chat_id, "Вернулись", reply_markup=helpmarkup)
                 elif text == 'Статистика сервера':
-                    bot.sendMessage(chat_id, 'reply', disable_web_page_preview=True)
+                    bot.send_message(chat_id, 'reply', disable_web_page_preview=True)
                 elif text == 'Подписки на бота':
                     message = '*На меня подписано:*\n'
                     conn = sqlite3.connect("mydatabase.db")
@@ -128,7 +128,7 @@ def echo_message(message):
                             "else 'Администраторов' end) as label,count(chat_id) from chats group by label;"):
                         message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
                     conn.close()
-                    bot.sendMessage(chat_id, message, parse_mode='MARKDOWN')
+                    bot.send_message(chat_id, message, parse_mode='MARKDOWN')
         else:
             if chat_id in userchatid:
                 if chat_id in inlk:
@@ -137,21 +137,21 @@ def echo_message(message):
                             f = open('/root/bot_tele/etc/list.xml', 'rb', )
                             bot.sendDocument(chat_id, f)
                         except:
-                            bot.sendMessage(chat_id, 'Приношу свои изминения, у меня нет актуального прайса! \n'
+                            bot.send_message(chat_id, 'Приношу свои изминения, у меня нет актуального прайса! \n'
                                                      'Но не переживайте, я уже предупредил администратора!')
                             for admin_chat_id in adminchatid:
                                 try:
                                     bot.sendChatAction(admin_chat_id, 'typing')
-                                    bot.sendMessage(admin_chat_id, "Клиент запросил прайс, а файла у бота нет")
+                                    bot.send_message(admin_chat_id, "Клиент запросил прайс, а файла у бота нет")
                                     bot.forwardMessage(admin_chat_id, chat_id, msg['message_id'])
                                 except:
                                     print("Хм-м")
                     if text == 'Назад':
                         inlk.remove(chat_id)
-                        bot.sendMessage(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
+                        bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                 else:
                     if text == "Про нас":
-                        bot.sendMessage(chat_id,
+                        bot.send_message(chat_id,
                                         "Арт-лаборатория ELEMENT\n\nПрофессиональные шоу программы и анимация на"
                                         " любое торжество. Оригинальные, яркие, запоминающиеся!\n\n🔥    Огненное "
                                         "шоу\n💡    Светодиодное шоу\n ⚡️   Электрическое шоу\n 💨   Шоу Вет"
@@ -160,7 +160,7 @@ def echo_message(message):
                                         "-фуршет, живые статуи",
                                         reply_markup=elementmarkup_soc)
                     elif text == "Proxy для любимого клиента":
-                        bot.sendMessage(chat_id,
+                        bot.send_message(chat_id,
                                         "[Настройка Proxy](https://t.me/socks?server=195.201.136.255&"
                                         "port=1080&user=element_89179024466&pass=*****)",
                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
@@ -178,11 +178,11 @@ def echo_message(message):
                                                                                         "" + chat_id + "';")
                         conn.commit()
                         conn.close()
-                        bot.sendMessage(chat_id, "Спасибо, что были с нами!",
+                        bot.send_message(chat_id, "Спасибо, что были с нами!",
                                         reply_markup=elementmarkup_unreg)
                     elif text == "Личный кабинет":
                         inlk.append(chat_id)
-                        bot.sendMessage(chat_id, "Ваш личный кабинет", reply_markup=elementmarkup_lk)
+                        bot.send_message(chat_id, "Ваш личный кабинет", reply_markup=elementmarkup_lk)
             else:
                 if text == '/start':
                     conn = sqlite3.connect("mydatabase.db")
@@ -190,7 +190,7 @@ def echo_message(message):
                     cursor.execute("INSERT INTO chats(chat_id) VALUES (?);", chat_id)
                     conn.commit()
                     conn.close()
-                    bot.sendMessage(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
+                    bot.send_message(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
                 elif text == 'Подписка на бота':
                     if chat_type == 'private':
                         userchatid.append(chat_id)
@@ -204,13 +204,13 @@ def echo_message(message):
                                        "name = '" + name + "' where chat_id = '" + chat_id + "';")
                         conn.commit()
                         conn.close()
-                        bot.sendMessage(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
+                        bot.send_message(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
                                         reply_markup=elementmarkup_reg)
                     else:
-                        bot.sendMessage(chat_id, "Только для личных чатов",
+                        bot.send_message(chat_id, "Только для личных чатов",
                                         reply_markup=elementmarkup_unreg)
                 elif text == "Про нас":
-                    bot.sendMessage(chat_id,
+                    bot.send_message(chat_id,
                                     "Арт-лаборатория ELEMENT\n\nПрофессиональные "
                                     "шоу программы и анимация на любое торжество. "
                                     "Оригинальные, яркие, запоминающиеся!\n\n🔥    "
