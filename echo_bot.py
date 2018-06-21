@@ -56,7 +56,7 @@ yn_markup.add('Да', 'Нет', 'Хватит')
 yn_only_markup = types.ReplyKeyboardMarkup(row_width=1)
 yn_only_markup.add('Да', 'Нет')
 
-elementmarkup_reg = types.ReplyKeyboardMarkup(row_width=2)
+elementmarkup_reg = types.ReplyKeyboardMarkup(row_width=1)
 elementmarkup_reg.add('Про нас', 'Личный кабинет', 'Proxy для любимого клиента', 'Отписаться от бота')
 
 elementmarkup_unreg = types.ReplyKeyboardMarkup(row_width=1)
