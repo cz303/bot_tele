@@ -42,9 +42,6 @@ elementmarkup_soc.add(callback_button)
 adminmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 adminmarkup.add('Массовая рассылка', 'Статистика')
 
-staticmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
-staticmarkup.add('Статистика сервера', 'Подписки на бота', 'Работа бота', 'Назад')
-
 yn_markup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 yn_markup.add('Да', 'Нет', 'Хватит')
 
