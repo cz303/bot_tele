@@ -174,10 +174,7 @@ def echo_message(message):
 
                     bot.send_message(chat_id, reply, parse_mode='MARKDOWN', disable_web_page_preview=True)
             if chat_id in setmessage:
-                if text == 'Хватит':
-                    setmessage.remove(chat_id)
-                    bot.send_message(chat_id, "Всё закончил", reply_markup=adminmarkup)
-                elif text != 'Массовая рассылка':
+                if text != 'Массовая рассылка':
                     setmessage.remove(chat_id)
                     k = 0
                     for row in cursor.execute("select chat_id, name from chats where status = 1"):
@@ -356,6 +353,13 @@ def ignore(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'less_day')
 def less_day(call):
     bot.answer_callback_query(call.id, text="Дата должна быть позже сегодня")
+
+@bot.callback_query_handler(func=lambda call: call.data == 'back')
+def less_day(call):
+    bot.answer_callback_query(call.id, text="Отправка отменена")
+    setmessage.remove(call.message.chat.id)
+    bot.edit_message_text(call.message.text, call.from_user.id,
+                          call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
 
 
 for admin_chat_id in adminchatid:
