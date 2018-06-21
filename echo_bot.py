@@ -6,7 +6,7 @@ from tokens \
     import *
 import random
 import logging
-import datetime
+from datetime import datetime
 import sqlite3
 
 logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
