@@ -94,9 +94,15 @@ bot = telebot.TeleBot(telegrambot)
 
 
 # Handle '/start' and '/help'
-@bot.message_handler(commands=['help', 'start'])
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
-    bot.send_message(message.chat.id, "Привет! Справшивай, я расскажу")
+    conn = sqlite3.connect("mydatabase.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO chats(chat_id) VALUES ('" + str(message.chat.id) + "');")
+    conn.commit()
+    conn.close()
+    bot.send_message(message.chat.id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
+
 
 
 # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
@@ -210,14 +216,7 @@ def echo_message(message):
                         inlk.append(chat_id)
                         bot.send_message(chat_id, "Ваш личный кабинет", reply_markup=elementmarkup_lk)
             else:
-                if text == '/start':
-                    conn = sqlite3.connect("mydatabase.db")
-                    cursor = conn.cursor()
-                    cursor.execute("INSERT INTO chats(chat_id) VALUES (?);", (str(chat_id),))
-                    conn.commit()
-                    conn.close()
-                    bot.send_message(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
-                elif text == 'Подписка на бота':
+                if text == 'Подписка на бота':
                     if chat_type == 'private':
                         userchatid.append(chat_id)
                         if str(message.chat.first_name):
