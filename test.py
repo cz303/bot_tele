@@ -26,7 +26,7 @@ def get_day(call):
         day=call.data[13:]
         date = datetime.datetime(int(saved_date[0]),int(saved_date[1]),int(day))
         bot.send_message(chat_id, "Вы выбрали: *" + str(date.strftime("%d.%m.%Y")) + "*", parse_mode='MARKDOWN')
-        bot.answer_callback_query(call.id, text="")
+        bot.answer_callback_query(call.id, text="Дата выбрана")
 
     else:
         #Do something to inform of the error
@@ -74,5 +74,8 @@ def previous_month(call):
 def ignore(call):
     bot.answer_callback_query(call.id, text="")
 
+@bot.callback_query_handler(func=lambda call: call.data == 'less_day')
+def less_day(call):
+    bot.answer_callback_query(call.id, text="Дата должна быть позже сегодня")
 
 bot.polling()
