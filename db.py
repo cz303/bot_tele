@@ -9,8 +9,12 @@ cursor = conn.cursor()
 #моя личка chat_id = '109099327'
 #cursor.execute("UPDATE chats SET status = 2 where chat_id = -241874218;")
 
-# Создание таблицы "Заказы"
+# Создание таблицы "Статистики"
+#cursor.execute("DROP TABLE stats;")
+cursor.execute("CREATE TABLE stats(stat text, number INTEGER DEFAULT 0, name text,  UNIQUE(stat) );")
 
+
+# Создание таблицы "Заказы"
 #cursor.execute("DROP TABLE registed_chats;")
 #cursor.execute("CREATE TABLE registed_chats(chat_id text, status INTEGER DEFAULT 0, name text,  UNIQUE(chat_id) );")
 
