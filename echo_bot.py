@@ -176,9 +176,8 @@ def echo_message(message):
             if chat_id in setmessage:
                 if text != 'Массовая рассылка':
                     label = "*Собщение для отправки:*\n\n"
-                    bot.send_message(label + text, chat_id,
-                                          message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True,
-                                          reply_markup=sendmarkup)
+                    bot.send_message(label + text, chat_id, parse_mode='MARKDOWN',
+                                          reply_markup=sendmarkup, disable_web_page_preview=True)
         else:
             if chat_id in userchatid:
                 if chat_id in inlk:
