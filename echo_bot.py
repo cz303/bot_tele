@@ -36,10 +36,8 @@ sendmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_da
 
 
 elementmarkup_unreg = types.ReplyKeyboardMarkup(row_width=1)
-itembtn1 = types.KeyboardButton('Про нас')
-itembtn2 = types.KeyboardButton('Подписка на бота')
-elementmarkup_unreg.add(itembtn1)
-elementmarkup_unreg.add(itembtn2)
+elementmarkup_unreg.add(types.KeyboardButton('Про нас'))
+elementmarkup_unreg.add(types.KeyboardButton('Подписка на бота'))
 
 elementmarkup_soc = types.InlineKeyboardMarkup()
 elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show/"))
@@ -58,7 +56,7 @@ yn_markup.add('Да', 'Нет', 'Хватит')
 yn_only_markup = types.ReplyKeyboardMarkup(row_width=1)
 yn_only_markup.add('Да', 'Нет')
 
-elementmarkup_reg = types.ReplyKeyboardMarkup(row_width=1)
+elementmarkup_reg = types.ReplyKeyboardMarkup(row_width=2)
 elementmarkup_reg.add('Про нас', 'Личный кабинет', 'Proxy для любимого клиента', 'Отписаться от бота')
 
 elementmarkup_unreg = types.ReplyKeyboardMarkup(row_width=1)
