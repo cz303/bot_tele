@@ -35,7 +35,7 @@ sendmarkup.add(types.InlineKeyboardButton(text="Отправить", callback_da
 sendmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
 
 
-elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False, row_width=1)
+elementmarkup_unreg = types.ReplyKeyboardMarkup(row_width=1)
 itembtn1 = types.KeyboardButton('Про нас')
 itembtn2 = types.KeyboardButton('Подписка на бота')
 elementmarkup_unreg.add(itembtn1)
@@ -47,24 +47,24 @@ elementmarkup_soc.add(types.InlineKeyboardButton(text="ВКонтакте", url=
 elementmarkup_soc.add(types.InlineKeyboardButton(text="Официальный сайт", url="http://deliriumshow.com/"))
 
 
-adminmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+adminmarkup = types.ReplyKeyboardMarkup(row_width=1)
 itembtn1 = types.KeyboardButton('Массовая рассылка')
 itembtn2 = types.KeyboardButton('Статистика')
 adminmarkup.add(itembtn1, itembtn2)
 
-yn_markup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+yn_markup = types.ReplyKeyboardMarkup(row_width=1)
 yn_markup.add('Да', 'Нет', 'Хватит')
 
-yn_only_markup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+yn_only_markup = types.ReplyKeyboardMarkup(row_width=1)
 yn_only_markup.add('Да', 'Нет')
 
-elementmarkup_reg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+elementmarkup_reg = types.ReplyKeyboardMarkup(row_width=1)
 elementmarkup_reg.add('Про нас', 'Личный кабинет', 'Proxy для любимого клиента', 'Отписаться от бота')
 
-elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+elementmarkup_unreg = types.ReplyKeyboardMarkup(row_width=1)
 elementmarkup_unreg.add('Про нас', 'Подписка на бота')
 
-elementmarkup_lk = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+elementmarkup_lk = types.ReplyKeyboardMarkup(row_width=1)
 elementmarkup_lk.add('Заказать прайслист', 'Календарь', 'Назад')
 
 likemarkup = types.InlineKeyboardMarkup()
