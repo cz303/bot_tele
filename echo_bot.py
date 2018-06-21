@@ -271,7 +271,7 @@ def like(call):
     conn.commit()
     conn.close()
     bot.answer_callback_query(call.id, text="Спасибо за отзыв")
-    bot.edit_message_text("", call.from_user.id,
+    bot.edit_message_reply_markup(call.from_user.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'dislike')
@@ -282,7 +282,7 @@ def dislike(call):
     conn.commit()
     conn.close()
     bot.answer_callback_query(call.id, text="Спасибо за отзыв")
-    bot.edit_message_text(call.message.text, call.from_user.id,
+    bot.edit_message_reply_markup(call.from_user.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
 
 @bot.callback_query_handler(func=lambda call: call.data[0:13] == 'calendar-day-')
