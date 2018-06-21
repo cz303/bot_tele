@@ -208,12 +208,15 @@ def echo_message(message):
                         bot.send_message(chat_id, "Ваш личный кабинет", reply_markup=elementmarkup_lk)
             else:
                 if text == '/start':
-                    conn = sqlite3.connect("mydatabase.db")
-                    cursor = conn.cursor()
-                    cursor.execute("INSERT INTO chats(chat_id) VALUES (" + str(chat_id) + ");")
-                    conn.commit()
-                    conn.close()
-                    bot.send_message(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
+                    try:
+                        conn = sqlite3.connect("mydatabase.db")
+                        cursor = conn.cursor()
+                        cursor.execute("INSERT INTO chats(chat_id) VALUES (" + str(chat_id) + ");")
+                        conn.commit()
+                        conn.close()
+                        bot.send_message(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
+                    except:
+                        bot.send_message(chat_id, "Пока всё плохо работает")
                 elif text == 'Подписка на бота':
                     if chat_type == 'private':
                         userchatid.append(chat_id)
