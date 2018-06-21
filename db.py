@@ -7,7 +7,7 @@ cursor = conn.cursor()
 #cursor.execute("DROP TABLE chats;")
 #cursor.execute("CREATE TABLE chats(chat_id REAL, name text dafault 'Your name', status INTEGER DEFAULT 0, UNIQUE(chat_id) );")
 #моя личка chat_id = '109099327'
-cursor.execute("UPDATE chats SET status = 2 where chat_id = '-241874218';")
+cursor.execute("UPDATE chats SET status = 2 where chat_id = -241874218;")
 
 # Создание таблицы "Заказы"
 
