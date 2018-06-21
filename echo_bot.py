@@ -349,9 +349,9 @@ def less_day(call):
 def less_day(call):
     bot.answer_callback_query(call.id, text="Отправка отменена")
     try:
-        setmessage.remove(call.message.chat.id)
         bot.edit_message_text("Отправка массовой рассылки отменена", call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
+        setmessage.remove(call.message.chat.id)
     except:
         pass
 
@@ -359,7 +359,6 @@ def less_day(call):
 def less_day(call):
     bot.answer_callback_query(call.id, text="Сообщения отправляются")
     try:
-        setmessage.remove(call.message.chat.id)
         k = 0
         text = str(call.message.text.lstrip('*Собщение для отправки:*\n\n'))
         conn = sqlite3.connect("mydatabase.db")
@@ -373,10 +372,14 @@ def less_day(call):
         conn.close()
         bot.edit_message_text("*Отправлено: *\n" + text + "\n\nВсего отправлено: " + str(k) + " сообщений", call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
+        setmessage.remove(call.message.chat.id)
     except:
         pass
+try:
+    for admin_chat_id in adminchatid:
+        bot.send_chat_action(admin_chat_id, 'typing')
+        bot.send_message(admin_chat_id, "Я запущен!", reply_markup=adminmarkup)
+except:
+    pass
 
-for admin_chat_id in adminchatid:
-    bot.send_chat_action(admin_chat_id, 'typing')
-    bot.send_message(admin_chat_id, "Я запущен!", reply_markup=adminmarkup)
 bot.polling()
