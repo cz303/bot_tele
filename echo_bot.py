@@ -59,13 +59,13 @@ elementmarkup_lk.add('Заказать прайслист', 'Назад')
 conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
 for row in cursor.execute("select chat_id from chats where status = 2;"):
-    adminchatid.append(int(row[0]))
+    adminchatid.append(float(row[0]))
 conn.close()
 
 conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
 for row in cursor.execute("select chat_id from chats where status = 1;"):
-    userchatid.append(int(row[0]))
+    userchatid.append(float(row[0]))
 conn.close()
 
 def clearall(chat_id):
