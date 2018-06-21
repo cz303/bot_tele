@@ -98,7 +98,7 @@ bot = telebot.TeleBot(telegrambot)
 def send_welcome(message):
     conn = sqlite3.connect("mydatabase.db")
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO chats(chat_id) VALUES ('" + str(message.chat.id) + "');")
+    cursor.execute("INSERT INTO chats(chat_id) VALUES (" + str(message.chat.id) + ");")
     conn.commit()
     conn.close()
     bot.send_message(message.chat.id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
@@ -110,7 +110,7 @@ def send_welcome(message):
 def echo_message(message):
     content_type = str(message.content_type)
     chat_type = str(message.chat.type)
-    chat_id = float(message.chat.id)
+    chat_id = message.chat.id
 
     if chat_id in adminchatid:
         logging.info("Incoming message on admin chat" + str(message) + " time:" + str(datetime.now()))
@@ -207,7 +207,7 @@ def echo_message(message):
                         cursor.execute("update chats set status = 0, name = '" + name + "' "
                                                                                         "where "
                                                                                         "chat_id = "
-                                                                                        "'" + str(chat_id) + "';")
+                                                                                        "" + str(chat_id) + ";")
                         conn.commit()
                         conn.close()
                         bot.send_message(chat_id, "Спасибо, что были с нами!",
@@ -226,7 +226,7 @@ def echo_message(message):
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         cursor.execute("update chats set status = 1, "
-                                       "name = '" + name + "' where chat_id = '" + str(chat_id) + "';")
+                                       "name = '" + name + "' where chat_id = " + str(chat_id) + ";")
                         conn.commit()
                         conn.close()
                         bot.send_message(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
