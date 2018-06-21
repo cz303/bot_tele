@@ -10,6 +10,8 @@ from datetime import datetime
 import sqlite3
 from telebot import types
 from telegramcalendar import create_calendar
+import psutil
+import operator
 
 logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
 
@@ -23,7 +25,7 @@ userchatid = []
 adminchatid = []
 graphstart = datetime.now()
 
-stopmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
+stopmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 stopmarkup.add('Хватит')
 
 elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
@@ -154,7 +156,39 @@ def echo_message(message):
                     viewstatic.remove(chat_id)
                     bot.send_message(chat_id, "Вернулись", reply_markup=adminmarkup)
                 elif text == 'Статистика сервера':
-                    bot.send_message(chat_id, 'reply', disable_web_page_preview=True)
+                    memory = psutil.virtual_memory()
+                    disk = psutil.disk_usage('/')
+                    boottime = datetime.fromtimestamp(psutil.boot_time())
+                    now = datetime.now()
+                    timedif = "Онлайн: %.1f часов" % (((now - boottime).total_seconds()) / 3600)
+                    memtotal = "Памяти: %.2f GB " % (memory.total / 1000000000)
+                    memavail = "Доступно: %.2f GB" % (memory.available / 1000000000)
+                    memuseperc = "Используется: " + str(memory.percent) + " %"
+                    diskused = "HDD используется: " + str(disk.percent) + " %"
+                    pids = psutil.pids()
+                    pidsreply = ''
+                    procs = {}
+                    for pid in pids:
+                        p = psutil.Process(pid)
+                        try:
+                            pmem = p.memory_percent()
+                            if pmem > 0.5:
+                                if p.name() in procs:
+                                    procs[p.name()] += pmem
+                                else:
+                                    procs[p.name()] = pmem
+                        except:
+                            print("Хм-м")
+                    sortedprocs = sorted(procs.items(), key=operator.itemgetter(1), reverse=True)
+                    for proc in sortedprocs:
+                        pidsreply += proc[0] + " " + ("%.2f" % proc[1]) + " %\n"
+                    reply = timedif + "\n" + \
+                            memtotal + "\n" + \
+                            memavail + "\n" + \
+                            memuseperc + "\n" + \
+                            diskused + "\n\n" + \
+                            pidsreply
+                    bot.sendMessage(chat_id, reply, disable_web_page_preview=True)
                 elif text == 'Подписки на бота':
                     message = '*На меня подписано:*\n'
                     conn = sqlite3.connect("mydatabase.db")
@@ -329,4 +363,8 @@ def ignore(call):
 def less_day(call):
     bot.answer_callback_query(call.id, text="Дата должна быть позже сегодня")
 
+
+for admin_chat_id in adminchatid:
+    bot.sendChatAction(admin_chat_id, 'typing')
+    bot.sendMessage(admin_chat_id, "Я запущен!", reply_markup=adminmarkup)
 bot.polling()
