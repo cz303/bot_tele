@@ -123,7 +123,6 @@ def echo_message(message):
     cursor = conn.cursor()
     cursor.execute("update stats set number = number+1 where stat = 'messages';")
     conn.commit()
-    conn.close()
 
     if chat_id in adminchatid:
         logging.info("Incoming message on admin chat" + str(message) + " time:" + str(datetime.now()))
@@ -147,15 +146,12 @@ def echo_message(message):
                 elif text != 'Массовая рассылка':
                     setmessage.remove(chat_id)
                     k = 0
-                    conn = sqlite3.connect("mydatabase.db")
-                    cursor = conn.cursor()
                     for row in cursor.execute("select chat_id, name from chats where status = 1"):
                         bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
                                          parse_mode='MARKDOWN', disable_web_page_preview=True, reply_markup=likemarkup)
                         k = k + 1
                     cursor.execute("update stats set number = number+" + str(k) + " where stat = 'mass_messages';")
                     conn.commit()
-                    conn.close()
                     bot.send_message(chat_id, "Отправил *" + str(k) + "* сообщений, "
                                                                       "продолжим...",
                                      parse_mode='MARKDOWN', reply_markup=adminmarkup)
@@ -199,23 +195,17 @@ def echo_message(message):
                     bot.send_message(chat_id, reply, disable_web_page_preview=True)
                 elif text == 'Подписки на бота':
                     message = '*На меня подписано:*\n'
-                    conn = sqlite3.connect("mydatabase.db")
-                    cursor = conn.cursor()
                     for row in cursor.execute(
                             "select (case when status = 0 then 'Пользователей' "
                             "when status = 1 then 'Зарегистрированных пользователей' "
                             "else 'Администраторов' end) as label,count(chat_id) from chats group by label;"):
                         message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
-                    conn.close()
                     bot.send_message(chat_id, message, parse_mode='MARKDOWN')
                 elif text == 'Работа бота':
                     message = '*Показатели:*\n'
-                    conn = sqlite3.connect("mydatabase.db")
-                    cursor = conn.cursor()
                     for row in cursor.execute(
                             "select name, number from stats;"):
                         message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
-                    conn.close()
                     bot.send_message(chat_id, message, parse_mode='MARKDOWN')
         else:
             if chat_id in userchatid:
@@ -265,14 +255,11 @@ def echo_message(message):
                             name = str(message.chat.first_name)
                         else:
                             name = str(message.chat.id)
-                        conn = sqlite3.connect("mydatabase.db")
-                        cursor = conn.cursor()
                         cursor.execute("update chats set status = 0, name = '" + name + "' "
                                                                                         "where "
                                                                                         "chat_id = "
                                                                                         "" + str(chat_id) + ";")
                         conn.commit()
-                        conn.close()
                         bot.send_message(chat_id, "Спасибо, что были с нами!",
                                          reply_markup=elementmarkup_unreg)
                     elif text == "Личный кабинет":
@@ -286,12 +273,9 @@ def echo_message(message):
                             name = str(message.chat.first_name)
                         else:
                             name = str(message.chat.id)
-                        conn = sqlite3.connect("mydatabase.db")
-                        cursor = conn.cursor()
                         cursor.execute("update chats set status = 1, "
                                        "name = '" + name + "' where chat_id = " + str(chat_id) + ";")
                         conn.commit()
-                        conn.close()
                         bot.send_message(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
                                          reply_markup=elementmarkup_reg)
                     else:
@@ -307,6 +291,7 @@ def echo_message(message):
                                      "ьное шоу\n🎀    Шоу гимнасток\n🔮    Контактное жонглирование\n🎪    Ходули"
                                      "сты, мимы, жонглеры, леди-фуршет, живые статуи",
                                      reply_markup=elementmarkup_soc)
+    conn.close()
 
 @bot.callback_query_handler(func=lambda call: call.data == 'like')
 def like(call):
