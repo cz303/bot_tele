@@ -83,7 +83,7 @@ def RepresentsInt(s):
 
 def hello(name):
     phrase = ['Привет, ', 'Добрый день, ', 'Здравствуйте, ', 'Аллоха, ']
-    i = random.randint(0,2)
+    i = random.randint(0,3)
     result = phrase[i] + name +"!"
     return result
 
@@ -99,8 +99,8 @@ def send_welcome(message):
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
     content_type = str(message.content_type)
-    chat_type =  str(message.chat.type)
-    chat_id = message.chat.id
+    chat_type = str(message.chat.type)
+    chat_id = float(message.chat.id)
 
 
     if chat_id in adminchatid:
@@ -197,8 +197,8 @@ def echo_message(message):
                         cursor = conn.cursor()
                         cursor.execute("update chats set status = 0, name = '" + name + "' "
                                                                                         "where "
-                                                                                        "chat_id = '"
-                                                                                        "" + str(chat_id) + "';")
+                                                                                        "chat_id = "
+                                                                                        "" + str(chat_id) + ";")
                         conn.commit()
                         conn.close()
                         bot.send_message(chat_id, "Спасибо, что были с нами!",
@@ -224,7 +224,7 @@ def echo_message(message):
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         cursor.execute("update chats set status = 1, "
-                                       "name = '" + name + "' where chat_id = '" + str(chat_id) + "';")
+                                       "name = '" + name + "' where chat_id = " + str(chat_id) + ";")
                         conn.commit()
                         conn.close()
                         bot.send_message(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
