@@ -132,13 +132,44 @@ def echo_message(message):
         text = str(message.text)
         bot.send_chat_action(chat_id, 'typing')
         if chat_id in adminchatid:
-            if chat_id not in setmessage and chat_id not in viewstatic:
+            if chat_id not in setmessage:
                 if text == 'Массовая рассылка':
                     setmessage.append(chat_id)
                     bot.send_message(chat_id, "Какое сообщение отправить?", reply_markup=stopmarkup)
                 elif text == 'Статистика':
-                    viewstatic.append(chat_id)
-                    bot.send_message(chat_id, "Смотрим статистику", reply_markup=staticmarkup)
+                    memory = psutil.virtual_memory()
+                    disk = psutil.disk_usage('/')
+                    boottime = datetime.fromtimestamp(psutil.boot_time())
+                    now = datetime.now()
+                    label_serv = "*Статистика сервера:*"
+                    timedif = "Онлайн: *%.1f* часов" % (((now - boottime).total_seconds()) / 3600)
+                    memtotal = "Памяти: *%.2f* GB " % (memory.total / 1000000000)
+                    memavail = "Доступно: *%.2f* GB" % (memory.available / 1000000000)
+                    memuseperc = "Используется: *" + str(memory.percent) + "* %"
+                    diskused = "HDD используется: *" + str(disk.percent) + "* %"
+
+                    label_follow = '*На меня подписано:*\n'
+                    for row in cursor.execute(
+                            "select (case when status = 0 then 'Пользователей' "
+                            "when status = 1 then 'Зарегистрированных пользователей' "
+                            "else 'Администраторов' end) as label,count(chat_id) from chats group by label;"):
+                        label_follow = label_follow + str(row[0]) + ": *" + str(row[1]) + "*\n"
+
+                    label_stats = '*Показатели:*\n'
+                    for row in cursor.execute(
+                            "select name, number from stats;"):
+                        label_stats = label_stats + str(row[0]) + ": *" + str(row[1]) + "*\n"
+
+                    reply = label_serv + "\n" + \
+                            timedif + "\n" + \
+                            memtotal + "\n" + \
+                            memavail + "\n" + \
+                            memuseperc + "\n" + \
+                            diskused + "\n\n" + \
+                            label_follow + "\n\n" + \
+                            label_stats
+
+                    bot.send_message(chat_id, reply, parse_mode='MARKDOWN', disable_web_page_preview=True)
             if chat_id in setmessage:
                 if text == 'Хватит':
                     setmessage.remove(chat_id)
@@ -155,58 +186,6 @@ def echo_message(message):
                     bot.send_message(chat_id, "Отправил *" + str(k) + "* сообщений, "
                                                                       "продолжим...",
                                      parse_mode='MARKDOWN', reply_markup=adminmarkup)
-            if chat_id in viewstatic:
-                if text == 'Назад':
-                    viewstatic.remove(chat_id)
-                    bot.send_message(chat_id, "Вернулись", reply_markup=adminmarkup)
-                elif text == 'Статистика сервера':
-                    memory = psutil.virtual_memory()
-                    disk = psutil.disk_usage('/')
-                    boottime = datetime.fromtimestamp(psutil.boot_time())
-                    now = datetime.now()
-                    timedif = "Онлайн: %.1f часов" % (((now - boottime).total_seconds()) / 3600)
-                    memtotal = "Памяти: %.2f GB " % (memory.total / 1000000000)
-                    memavail = "Доступно: %.2f GB" % (memory.available / 1000000000)
-                    memuseperc = "Используется: " + str(memory.percent) + " %"
-                    diskused = "HDD используется: " + str(disk.percent) + " %"
-                    pids = psutil.pids()
-                    pidsreply = ''
-                    procs = {}
-                    for pid in pids:
-                        p = psutil.Process(pid)
-                        try:
-                            pmem = p.memory_percent()
-                            if pmem > 0.5:
-                                if p.name() in procs:
-                                    procs[p.name()] += pmem
-                                else:
-                                    procs[p.name()] = pmem
-                        except:
-                            print("Хм-м")
-                    sortedprocs = sorted(procs.items(), key=operator.itemgetter(1), reverse=True)
-                    for proc in sortedprocs:
-                        pidsreply += proc[0] + " " + ("%.2f" % proc[1]) + " %\n"
-                    reply = timedif + "\n" + \
-                            memtotal + "\n" + \
-                            memavail + "\n" + \
-                            memuseperc + "\n" + \
-                            diskused + "\n\n" + \
-                            pidsreply
-                    bot.send_message(chat_id, reply, disable_web_page_preview=True)
-                elif text == 'Подписки на бота':
-                    message = '*На меня подписано:*\n'
-                    for row in cursor.execute(
-                            "select (case when status = 0 then 'Пользователей' "
-                            "when status = 1 then 'Зарегистрированных пользователей' "
-                            "else 'Администраторов' end) as label,count(chat_id) from chats group by label;"):
-                        message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
-                    bot.send_message(chat_id, message, parse_mode='MARKDOWN')
-                elif text == 'Работа бота':
-                    message = '*Показатели:*\n'
-                    for row in cursor.execute(
-                            "select name, number from stats;"):
-                        message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
-                    bot.send_message(chat_id, message, parse_mode='MARKDOWN')
         else:
             if chat_id in userchatid:
                 if chat_id in inlk:
