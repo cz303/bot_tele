@@ -210,7 +210,7 @@ def echo_message(message):
                 if text == '/start':
                     conn = sqlite3.connect("mydatabase.db")
                     cursor = conn.cursor()
-                    cursor.execute("INSERT INTO chats(chat_id) VALUES (?);", int(chat_id))
+                    cursor.execute("INSERT INTO chats(chat_id) VALUES (?);", str(chat_id))
                     conn.commit()
                     conn.close()
                     bot.send_message(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
