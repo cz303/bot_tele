@@ -56,7 +56,7 @@ elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 elementmarkup_unreg.add('Про нас', 'Подписка на бота')
 
 elementmarkup_lk = types.ReplyKeyboardMarkup(one_time_keyboard=False)
-elementmarkup_lk.add('Заказать прайслист', 'Назад')
+elementmarkup_lk.add('Заказать прайслист', 'Календарь', 'Назад')
 
 likemarkup = types.InlineKeyboardMarkup()
 row=[]
@@ -187,7 +187,7 @@ def echo_message(message):
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Календарь':
-                        now = datetime.datetime.now()  # Current date
+                        now = datetime.now()  # Current date
                         chat_id = message.chat.id
                         date = (now.year, now.month)
                         current_shown_dates[chat_id] = date  # Saving the current date in a dict
