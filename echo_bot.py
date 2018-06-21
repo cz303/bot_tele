@@ -36,7 +36,8 @@ sendmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_da
 
 
 elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
-elementmarkup_unreg.add('Про нас', 'Подписка на бота')
+elementmarkup_unreg.add('Про нас')
+elementmarkup_unreg.add('Подписка на бота')
 
 elementmarkup_soc = types.InlineKeyboardMarkup()
 elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show/"))
@@ -196,7 +197,7 @@ def echo_message(message):
                                     print("Хм-м")
                     elif text == 'Назад':
                         inlk.remove(chat_id)
-                        bot.edit_message_reply_markup(chat_id, message.message_id, reply_markup=elementmarkup_reg)
+                        bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Календарь':
                         now = datetime.now()  # Current date
                         chat_id = message.chat.id
@@ -234,7 +235,7 @@ def echo_message(message):
                                          reply_markup=elementmarkup_unreg)
                     elif text == "Личный кабинет":
                         inlk.append(chat_id)
-                        bot.edit_message_reply_markup(chat_id, message.message_id, reply_markup=elementmarkup_lk)
+                        bot.send_message(chat_id, "Ваш личный кабинет", reply_markup=elementmarkup_lk)
             else:
                 if text == 'Подписка на бота':
                     if chat_type == 'private':
