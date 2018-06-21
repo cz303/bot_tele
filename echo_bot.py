@@ -360,7 +360,7 @@ def less_day(call):
     bot.answer_callback_query(call.id, text="Сообщения отправляются")
     try:
         k = 0
-        text = call.message.text.lstrip('*Собщение для отправки:*\n\n')
+        text = call.message.text#.lstrip('*Собщение для отправки:*\n\n')
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
         for row in cursor.execute("select chat_id, name from chats where status = 1"):
@@ -370,7 +370,7 @@ def less_day(call):
         cursor.execute("update stats set number = number+" + str(k) + " where stat = 'mass_messages';")
         conn.commit()
         conn.close()
-        bot.edit_message_text("*Отправлено: *\n" + text + "\n\nВсего отправлено: " + str(k) + " сообщений", call.message.chat.id,
+        bot.edit_message_text("*Отправлено: *\n\n" + text + "\n\nВсего отправлено: " + str(k) + " сообщений", call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
         setmessage.remove(call.message.chat.id)
     except:
