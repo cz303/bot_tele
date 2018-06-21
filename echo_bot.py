@@ -196,7 +196,7 @@ def echo_message(message):
                                     print("Хм-м")
                     elif text == 'Назад':
                         inlk.remove(chat_id)
-                        bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
+                        bot.edit_message_reply_markup(chat_id, message.message_id, reply_markup=elementmarkup_reg)
                     elif text == 'Календарь':
                         now = datetime.now()  # Current date
                         chat_id = message.chat.id
@@ -234,7 +234,7 @@ def echo_message(message):
                                          reply_markup=elementmarkup_unreg)
                     elif text == "Личный кабинет":
                         inlk.append(chat_id)
-                        bot.send_message(chat_id, "Ваш личный кабинет", reply_markup=elementmarkup_lk)
+                        bot.edit_message_reply_markup(chat_id, message.message_id, reply_markup=elementmarkup_lk)
             else:
                 if text == 'Подписка на бота':
                     if chat_type == 'private':
