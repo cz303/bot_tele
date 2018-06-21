@@ -1,10 +1,15 @@
 from telebot import types
 import calendar
+import locale
+
+
+
 
 def create_calendar(year,month):
     markup = types.InlineKeyboardMarkup()
     #First row - Month and Year
     row=[]
+    locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
     row.append(types.InlineKeyboardButton(calendar.month_name[month]+" "+str(year),callback_data="ignore"))
     markup.row(*row)
     #Second row - Week Days
