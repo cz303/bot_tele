@@ -20,7 +20,7 @@ userchatid = []
 adminchatid = []
 graphstart = datetime.now()
 
-stopmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+stopmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=True)
 stopmarkup.add('Хватит')
 
 elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
@@ -34,14 +34,27 @@ elementmarkup_soc.add(callback_button)
 callback_button = types.InlineKeyboardButton(text="Официальный сайт", url="http://deliriumshow.com/")
 elementmarkup_soc.add(callback_button)
 
-helpmarkup = {'keyboard': [['Массовая рассылка'], ['Статистика']]}
-staticmarkup = {'keyboard': [['Статистика сервера'], ['Подписки на бота'], ['Назад']]}
-yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
-yn_only_markup = {'keyboard': [['Да'], ['Нет']]}
-elementmarkup_reg = {'keyboard': [['Про нас'], ['Личный кабинет'],
-                                  ['Proxy для любимого клиента'], ['Отписаться от бота']]}
-elementmarkup_lk = {'keyboard': [['Заказать прайслист'], ['Назад']]}
-hide_keyboard = {'hide_keyboard': True}
+adminmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+adminmarkup.add('Массовая рассылка', 'Статистика')
+
+staticmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+staticmarkup.add('Статистика сервера', 'Подписки на бота', 'Назад')
+
+yn_markup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+yn_markup.add('Да', 'Нет', 'Хватит')
+
+yn_only_markup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+yn_only_markup.add('Да', 'Нет')
+
+elementmarkup_reg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+elementmarkup_reg.add('Про нас', 'Личный кабинет', 'Proxy для любимого клиента', 'Отписаться от бота')
+
+elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+elementmarkup_unreg.add('Про нас', 'Подписка на бота')
+
+elementmarkup_lk = types.ReplyKeyboardMarkup(one_time_keyboard=False)
+elementmarkup_lk.add('Заказать прайслист', 'Назад')
+
 
 conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
@@ -108,24 +121,24 @@ def echo_message(message):
             if chat_id in setmessage:
                 if text == 'Хватит':
                     setmessage.remove(chat_id)
-                    bot.send_message(chat_id, "Всё закончил", reply_markup=helpmarkup)
+                    bot.send_message(chat_id, "Всё закончил", reply_markup=adminmarkup)
                 elif text != 'Массовая рассылка':
                     setmessage.remove(chat_id)
                     k = 0
                     conn = sqlite3.connect("mydatabase.db")
                     cursor = conn.cursor()
                     for row in cursor.execute("select chat_id, name from chats where status = 1"):
-                        bot.send_message(row[0], hello(row[1]) + "\n\n" + msg['text'],
+                        bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
                                         parse_mode='MARKDOWN', disable_web_page_preview=True)
                         k = k + 1
                     conn.close()
                     bot.send_message(chat_id, "Отправил *" + str(k) + "* сообщений, "
                                                                      "продолжим...",
-                                    parse_mode='MARKDOWN', reply_markup=helpmarkup)
+                                    parse_mode='MARKDOWN', reply_markup=adminmarkup)
             if chat_id in viewstatic:
                 if text == 'Назад':
                     viewstatic.remove(chat_id)
-                    bot.send_message(chat_id, "Вернулись", reply_markup=helpmarkup)
+                    bot.send_message(chat_id, "Вернулись", reply_markup=adminmarkup)
                 elif text == 'Статистика сервера':
                     bot.send_message(chat_id, 'reply', disable_web_page_preview=True)
                 elif text == 'Подписки на бота':
@@ -145,15 +158,15 @@ def echo_message(message):
                     if text == "Заказать прайслист":
                         try:
                             f = open('/root/bot_tele/etc/list.xml', 'rb', )
-                            bot.sendDocument(chat_id, f)
+                            bot.send_document(chat_id, f)
                         except:
                             bot.send_message(chat_id, 'Приношу свои изминения, у меня нет актуального прайса! \n'
                                                      'Но не переживайте, я уже предупредил администратора!')
                             for admin_chat_id in adminchatid:
                                 try:
-                                    bot.sendChatAction(admin_chat_id, 'typing')
+                                    bot.send_chat_action(admin_chat_id, 'typing')
                                     bot.send_message(admin_chat_id, "Клиент запросил прайс, а файла у бота нет")
-                                    bot.forwardMessage(admin_chat_id, chat_id, msg['message_id'])
+                                    bot.forward_message(admin_chat_id, chat_id, message.message_id)
                                 except:
                                     print("Хм-м")
                     if text == 'Назад':
