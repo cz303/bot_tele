@@ -35,9 +35,8 @@ sendmarkup.add(types.InlineKeyboardButton(text="Отправить", callback_da
 sendmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
 
 
-elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
-elementmarkup_unreg.add('Про нас')
-elementmarkup_unreg.add('Подписка на бота')
+elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False, row_width=1)
+elementmarkup_unreg.add('Про нас', 'Подписка на бота')
 
 elementmarkup_soc = types.InlineKeyboardMarkup()
 elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show/"))
