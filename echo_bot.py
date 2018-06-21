@@ -9,6 +9,7 @@ import logging
 from datetime import datetime
 import sqlite3
 from telebot import types
+from telegramcalendar import create_calendar
 
 logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
 
@@ -55,6 +56,12 @@ elementmarkup_unreg.add('Про нас', 'Подписка на бота')
 elementmarkup_lk = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 elementmarkup_lk.add('Заказать прайслист', 'Назад')
 
+likemarkup = types.InlineKeyboardMarkup()
+row=[]
+row.append(types.InlineKeyboardButton("👍",callback_data="like"))
+row.append(types.InlineKeyboardButton("👎",callback_data="dislike"))
+likemarkup.row(*row)
+
 conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
 for row in cursor.execute("select chat_id from chats where status = 2;"):
@@ -92,8 +99,6 @@ def hello(name):
 
 bot = telebot.TeleBot(telegrambot)
 
-
-# Handle '/start' and '/help'
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     conn = sqlite3.connect("mydatabase.db")
@@ -104,8 +109,6 @@ def send_welcome(message):
     bot.send_message(message.chat.id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
 
 
-
-# Handle all other messages with content_type 'text' (content_types defaults to ['text'])
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
     content_type = str(message.content_type)
@@ -138,7 +141,7 @@ def echo_message(message):
                     cursor = conn.cursor()
                     for row in cursor.execute("select chat_id, name from chats where status = 1"):
                         bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
-                                         parse_mode='MARKDOWN', disable_web_page_preview=True)
+                                         parse_mode='MARKDOWN', disable_web_page_preview=True, markup=likemarkup)
                         k = k + 1
                     conn.close()
                     bot.send_message(chat_id, "Отправил *" + str(k) + "* сообщений, "
@@ -178,9 +181,16 @@ def echo_message(message):
                                     bot.forward_message(admin_chat_id, chat_id, message.message_id)
                                 except:
                                     print("Хм-м")
-                    if text == 'Назад':
+                    elif text == 'Назад':
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
+                    elif text == 'Календарь':
+                        now = datetime.datetime.now()  # Current date
+                        chat_id = message.chat.id
+                        date = (now.year, now.month)
+                        current_shown_dates[chat_id] = date  # Saving the current date in a dict
+                        markup = create_calendar(now.year, now.month)
+                        bot.send_message(message.chat.id, "Пожалуйста, выберете дату", reply_markup=markup)
                 else:
                     if text == "Про нас":
                         bot.send_message(chat_id,
@@ -245,5 +255,16 @@ def echo_message(message):
                                      "сты, мимы, жонглеры, леди-фуршет, живые статуи",
                                      reply_markup=elementmarkup_soc)
 
+@bot.callback_query_handler(func=lambda call: call.data == 'like')
+def like(call):
+    bot.answer_callback_query(call.id, text="Спасибо за отзыв")
+    bot.edit_message_text(call.message.text, call.from_user.id,
+                          call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
+
+@bot.callback_query_handler(func=lambda call: call.data == 'dislike')
+def dislike(call):
+    bot.answer_callback_query(call.id, text="Спасибо за отзыв")
+    bot.edit_message_text(call.message.text, call.from_user.id,
+                          call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
 
 bot.polling()
