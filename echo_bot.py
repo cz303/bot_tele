@@ -198,7 +198,7 @@ def echo_message(message):
                         cursor.execute("update chats set status = 0, name = '" + name + "' "
                                                                                         "where "
                                                                                         "chat_id = '"
-                                                                                        "" + chat_id + "';")
+                                                                                        "" + str(chat_id) + "';")
                         conn.commit()
                         conn.close()
                         bot.send_message(chat_id, "Спасибо, что были с нами!",
@@ -224,7 +224,7 @@ def echo_message(message):
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
                         cursor.execute("update chats set status = 1, "
-                                       "name = '" + name + "' where chat_id = '" + chat_id + "';")
+                                       "name = '" + name + "' where chat_id = '" + str(chat_id) + "';")
                         conn.commit()
                         conn.close()
                         bot.send_message(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
