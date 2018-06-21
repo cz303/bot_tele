@@ -8,7 +8,7 @@ def create_calendar(year,month):
     row.append(types.InlineKeyboardButton(calendar.month_name[month]+" "+str(year),callback_data="ignore"))
     markup.row(*row)
     #Second row - Week Days
-    week_days=["M","T","W","R","F","S","U"]
+    week_days=["П","В","С","Ч","П","С","В"]
     row=[]
     for day in week_days:
         row.append(types.InlineKeyboardButton(day,callback_data="ignore"))
