@@ -86,7 +86,7 @@ def echo_message(message):
         logging.info("Incoming message on public chat" + str(message) + " time:" + str(datetime.now()))
     if content_type == 'text':
         text = str(message.text)
-        bot.sendChatAction(chat_id, 'typing')
+        bot.send_chat_action(chat_id, 'typing')
         if chat_id in adminchatid:
             if chat_id not in setmessage and chat_id not in viewstatic:
                 if text == 'Массовая рассылка':
