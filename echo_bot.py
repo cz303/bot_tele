@@ -275,7 +275,7 @@ def get_day(call):
     saved_date = current_shown_dates.get(chat_id)
     if(saved_date is not None):
         day=call.data[13:]
-        date = datetime.datetime(int(saved_date[0]),int(saved_date[1]),int(day))
+        date = datetime(int(saved_date[0]),int(saved_date[1]),int(day))
         bot.edit_message_text("Вы выбрали: *" + str(date.strftime("%d.%m.%Y")) + "*", call.from_user.id, call.message.message_id, parse_mode='MARKDOWN')
         bot.answer_callback_query(call.id, text="Дата выбрана")
 
