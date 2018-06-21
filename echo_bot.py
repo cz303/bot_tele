@@ -17,6 +17,6 @@ def send_welcome(message):
 # Handle all other messages with content_type 'text' (content_types defaults to ['text'])
 @bot.message_handler(func=lambda message: True)
 def echo_message(message):
-    bot.reply_to(message, message.content_type + message.chat.type + message.chat.id + message.text)
+    bot.reply_to(message, str(message.content_type) + str(message.chat.type) + str(message.chat.id) + message.text)
 
 bot.polling()
