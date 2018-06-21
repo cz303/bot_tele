@@ -12,6 +12,10 @@ cursor = conn.cursor()
 # Создание таблицы "Статистики"
 #cursor.execute("DROP TABLE stats;")
 cursor.execute("CREATE TABLE stats(stat text, number INTEGER DEFAULT 0, name text,  UNIQUE(stat) );")
+cursor.execute("INSERT INTO stats(stat,name) VALUES ('likes','Лайков');")
+cursor.execute("INSERT INTO stats(stat,name) VALUES ('dislikes','Дизлайков');")
+cursor.execute("INSERT INTO stats(stat,name) VALUES ('messages','Всего получено сообщений');")
+cursor.execute("INSERT INTO stats(stat,name) VALUES ('mass_messages','Всего отправлено сообщений в рассылках');")
 
 
 # Создание таблицы "Заказы"
