@@ -26,6 +26,14 @@ stopmarkup.add('Хватит')
 elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 elementmarkup_unreg.add('Про нас', 'Подписка на бота')
 
+elementmarkup_soc = types.InlineKeyboardMarkup()
+callback_button = types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show/")
+elementmarkup_soc.add(callback_button)
+callback_button = types.InlineKeyboardButton(text="ВКонтакте", url="https://vk.com/club92907131")
+elementmarkup_soc.add(callback_button)
+callback_button = types.InlineKeyboardButton(text="Официальный сайт", url="http://deliriumshow.com/")
+elementmarkup_soc.add(callback_button)
+
 helpmarkup = {'keyboard': [['Массовая рассылка'], ['Статистика']]}
 staticmarkup = {'keyboard': [['Статистика сервера'], ['Подписки на бота'], ['Назад']]}
 yn_markup = {'keyboard': [['Да'], ['Нет'], ['Хватит']]}
@@ -33,9 +41,6 @@ yn_only_markup = {'keyboard': [['Да'], ['Нет']]}
 elementmarkup_reg = {'keyboard': [['Про нас'], ['Личный кабинет'],
                                   ['Proxy для любимого клиента'], ['Отписаться от бота']]}
 elementmarkup_lk = {'keyboard': [['Заказать прайслист'], ['Назад']]}
-elementmarkup_soc = {'inline_keyboard': [[{"text": "Instagram", "url": "https://www.instagram.com/element_show/"}],
-                                         [{"text": "ВКонтакте", "url": "https://vk.com/club92907131"}],
-                     [{"text": "Официальный сайт", "url": "http://deliriumshow.com/"}]]}
 hide_keyboard = {'hide_keyboard': True}
 
 conn = sqlite3.connect("mydatabase.db")
