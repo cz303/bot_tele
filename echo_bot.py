@@ -349,7 +349,11 @@ def less_day(call):
 def less_day(call):
     bot.answer_callback_query(call.id, text="Отправка отменена")
     try:
-        bot.edit_message_text("Отправка массовой рассылки отменена", call.message.chat.id,
+        if call.message.from_user.username:
+            text = "Отправка массовой рассылки отменена. Пользователем: *@" + call.message.from_user.username + "*"
+        else:
+            text = "Отправка массовой рассылки отменена"
+        bot.edit_message_text(text, call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
         setmessage.remove(call.message.chat.id)
     except:
