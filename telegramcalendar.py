@@ -1,7 +1,7 @@
 from telebot import types
 import calendar
 import locale
-
+from datetime import datetime
 
 
 
@@ -30,7 +30,11 @@ def create_calendar(year,month):
         markup.row(*row)
     #Last row - Buttons
     row=[]
-    row.append(types.InlineKeyboardButton("<",callback_data="previous-month"))
+    now = datetime.datetime.now()
+    if now.strftime("%m.%Y") > datetime.strptime(month+year, "%m.%Y"):
+        row.append(types.InlineKeyboardButton("<",callback_data="previous-month"))
+    else:
+        row.append(types.InlineKeyboardButton(" ", callback_data="ignore"))
     row.append(types.InlineKeyboardButton(" ",callback_data="ignore"))
     row.append(types.InlineKeyboardButton(">",callback_data="next-month"))
     markup.row(*row)
