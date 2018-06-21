@@ -138,7 +138,7 @@ def echo_message(message):
             if chat_id not in setmessage:
                 if text == 'Массовая рассылка':
                     setmessage.append(chat_id)
-                    bot.send_message(chat_id, "Какое сообщение отправить?\n\n" + rules, reply_markup=stopmarkup)
+                    bot.send_message(chat_id, "Какое сообщение отправить?\n\n" + rules, reply_markup=stopmarkup, disable_web_page_preview=True)
                 elif text == 'Статистика':
                     memory = psutil.virtual_memory()
                     disk = psutil.disk_usage('/')
