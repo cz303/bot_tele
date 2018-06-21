@@ -25,8 +25,14 @@ userchatid = []
 adminchatid = []
 graphstart = datetime.now()
 
-stopmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
-stopmarkup.add('Хватит')
+rules = "*Жирный*\n_Курсив_\n[Отображаемое имя ссылки](Адрес ссылки, пример https://ya.ru)"
+
+stopmarkup = types.InlineKeyboardMarkup()
+stopmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
+
+sendmarkup = types.InlineKeyboardMarkup()
+sendmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
+sendmarkup.add(types.InlineKeyboardButton(text="Отправить", callback_data="send"))
 
 elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 elementmarkup_unreg.add('Про нас', 'Подписка на бота')
@@ -132,7 +138,7 @@ def echo_message(message):
             if chat_id not in setmessage:
                 if text == 'Массовая рассылка':
                     setmessage.append(chat_id)
-                    bot.send_message(chat_id, "Какое сообщение отправить?", reply_markup=stopmarkup)
+                    bot.send_message(chat_id, "Какое сообщение отправить?\n\n" + rules, reply_markup=stopmarkup)
                 elif text == 'Статистика':
                     memory = psutil.virtual_memory()
                     disk = psutil.disk_usage('/')
