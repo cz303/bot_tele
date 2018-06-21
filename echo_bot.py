@@ -348,14 +348,16 @@ def less_day(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'back')
 def less_day(call):
     bot.answer_callback_query(call.id, text="Отправка отменена")
-    setmessage.remove(call.message.chat.id)
-    bot.edit_message_text("Отправка массовой рассылки отменена отменена", call.message.chat.id,
+    try:
+        setmessage.remove(call.message.chat.id)
+    bot.edit_message_text("Отправка массовой рассылки отменена", call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send')
 def less_day(call):
     bot.answer_callback_query(call.id, text="Сообщения отправляются")
-    setmessage.remove(call.message.chat.id)
+    try:
+        setmessage.remove(call.message.chat.id)
     k = 0
     text = str(call.message.text.lstrip('*Собщение для отправки:*\n\n'))
     conn = sqlite3.connect("mydatabase.db")
