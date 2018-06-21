@@ -175,17 +175,10 @@ def echo_message(message):
                     bot.send_message(chat_id, reply, parse_mode='MARKDOWN', disable_web_page_preview=True)
             if chat_id in setmessage:
                 if text != 'Массовая рассылка':
-                    setmessage.remove(chat_id)
-                    k = 0
-                    for row in cursor.execute("select chat_id, name from chats where status = 1"):
-                        bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
-                                         parse_mode='MARKDOWN', disable_web_page_preview=True, reply_markup=likemarkup)
-                        k = k + 1
-                    cursor.execute("update stats set number = number+" + str(k) + " where stat = 'mass_messages';")
-                    conn.commit()
-                    bot.send_message(chat_id, "Отправил *" + str(k) + "* сообщений, "
-                                                                      "продолжим...",
-                                     parse_mode='MARKDOWN', reply_markup=adminmarkup)
+                    label = "*Собщение для отправки:*\n\n"
+                    bot.edit_message_text(label + text, chat_id,
+                                          message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True,
+                                          reply_markup=sendmarkup)
         else:
             if chat_id in userchatid:
                 if chat_id in inlk:
@@ -358,9 +351,25 @@ def less_day(call):
 def less_day(call):
     bot.answer_callback_query(call.id, text="Отправка отменена")
     setmessage.remove(call.message.chat.id)
-    bot.edit_message_text("Отправка отменена", call.message.chat.id,
+    bot.edit_message_text("Отправка массовой рассылки отменена отменена", call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
 
+@bot.callback_query_handler(func=lambda call: call.data == 'send')
+def less_day(call):
+    bot.answer_callback_query(call.id, text="Сообщения отправляются")
+    setmessage.remove(call.message.chat.id)
+    k = 0
+    conn = sqlite3.connect("mydatabase.db")
+    cursor = conn.cursor()
+    for row in cursor.execute("select chat_id, name from chats where status = 1"):
+        bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
+                         parse_mode='MARKDOWN', disable_web_page_preview=True, reply_markup=likemarkup)
+        k = k + 1
+    cursor.execute("update stats set number = number+" + str(k) + " where stat = 'mass_messages';")
+    conn.commit()
+    conn.close()
+    bot.edit_message_text("*Отправлено: *\n" + call.message.text + "\n\nВсего: " + str(k) + " сообщений", call.message.chat.id,
+                          call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
 
 for admin_chat_id in adminchatid:
     bot.send_chat_action(admin_chat_id, 'typing')
