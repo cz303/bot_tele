@@ -55,7 +55,6 @@ elementmarkup_unreg.add('Про нас', 'Подписка на бота')
 elementmarkup_lk = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 elementmarkup_lk.add('Заказать прайслист', 'Назад')
 
-
 conn = sqlite3.connect("mydatabase.db")
 cursor = conn.cursor()
 for row in cursor.execute("select chat_id from chats where status = 2;"):
@@ -68,11 +67,13 @@ for row in cursor.execute("select chat_id from chats where status = 1;"):
     userchatid.append(float(row[0]))
 conn.close()
 
+
 def clearall(chat_id):
     if chat_id in setmessage:
         setmessage.remove(chat_id)
     if chat_id in viewstatic:
         viewstatic.remove(chat_id)
+
 
 def RepresentsInt(s):
     try:
@@ -81,13 +82,16 @@ def RepresentsInt(s):
     except ValueError:
         return False
 
+
 def hello(name):
     phrase = ['Привет, ', 'Добрый день, ', 'Здравствуйте, ', 'Аллоха, ']
-    i = random.randint(0,3)
-    result = phrase[i] + name +"!"
+    i = random.randint(0, 3)
+    result = phrase[i] + name + "!"
     return result
 
+
 bot = telebot.TeleBot(telegrambot)
+
 
 # Handle '/start' and '/help'
 @bot.message_handler(commands=['help', 'start'])
@@ -101,7 +105,6 @@ def echo_message(message):
     content_type = str(message.content_type)
     chat_type = str(message.chat.type)
     chat_id = float(message.chat.id)
-
 
     if chat_id in adminchatid:
         logging.info("Incoming message on admin chat" + str(message) + " time:" + str(datetime.now()))
@@ -129,12 +132,12 @@ def echo_message(message):
                     cursor = conn.cursor()
                     for row in cursor.execute("select chat_id, name from chats where status = 1"):
                         bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
-                                        parse_mode='MARKDOWN', disable_web_page_preview=True)
+                                         parse_mode='MARKDOWN', disable_web_page_preview=True)
                         k = k + 1
                     conn.close()
                     bot.send_message(chat_id, "Отправил *" + str(k) + "* сообщений, "
-                                                                     "продолжим...",
-                                    parse_mode='MARKDOWN', reply_markup=adminmarkup)
+                                                                      "продолжим...",
+                                     parse_mode='MARKDOWN', reply_markup=adminmarkup)
             if chat_id in viewstatic:
                 if text == 'Назад':
                     viewstatic.remove(chat_id)
@@ -161,7 +164,7 @@ def echo_message(message):
                             bot.send_document(chat_id, f)
                         except:
                             bot.send_message(chat_id, 'Приношу свои изминения, у меня нет актуального прайса! \n'
-                                                     'Но не переживайте, я уже предупредил администратора!')
+                                                      'Но не переживайте, я уже предупредил администратора!')
                             for admin_chat_id in adminchatid:
                                 try:
                                     bot.send_chat_action(admin_chat_id, 'typing')
@@ -175,18 +178,18 @@ def echo_message(message):
                 else:
                     if text == "Про нас":
                         bot.send_message(chat_id,
-                                        "Арт-лаборатория ELEMENT\n\nПрофессиональные шоу программы и анимация на"
-                                        " любое торжество. Оригинальные, яркие, запоминающиеся!\n\n🔥    Огненное "
-                                        "шоу\n💡    Светодиодное шоу\n ⚡️   Электрическое шоу\n 💨   Шоу Вет"
-                                        "ра\n 🔦   Проекционное шоу\n🚨    Пиксельное шоу\n🎀    Шоу гимнасто"
-                                        "к\n🔮    Контактное жонглирование\n🎪    Ходулисты, мимы, жонглеры, леди"
-                                        "-фуршет, живые статуи",
-                                        reply_markup=elementmarkup_soc)
+                                         "Арт-лаборатория ELEMENT\n\nПрофессиональные шоу программы и анимация на"
+                                         " любое торжество. Оригинальные, яркие, запоминающиеся!\n\n🔥    Огненное "
+                                         "шоу\n💡    Светодиодное шоу\n ⚡️   Электрическое шоу\n 💨   Шоу Вет"
+                                         "ра\n 🔦   Проекционное шоу\n🚨    Пиксельное шоу\n🎀    Шоу гимнасто"
+                                         "к\n🔮    Контактное жонглирование\n🎪    Ходулисты, мимы, жонглеры, леди"
+                                         "-фуршет, живые статуи",
+                                         reply_markup=elementmarkup_soc)
                     elif text == "Proxy для любимого клиента":
                         bot.send_message(chat_id,
-                                        "[Настройка Proxy](https://t.me/socks?server=195.201.136.255&"
-                                        "port=1080&user=element_89179024466&pass=*****)",
-                                        parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
+                                         "[Настройка Proxy](https://t.me/socks?server=195.201.136.255&"
+                                         "port=1080&user=element_89179024466&pass=*****)",
+                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
                     elif text == 'Отписаться от бота':
                         userchatid.remove(chat_id)
                         if str(message.chat.first_name):
@@ -202,7 +205,7 @@ def echo_message(message):
                         conn.commit()
                         conn.close()
                         bot.send_message(chat_id, "Спасибо, что были с нами!",
-                                        reply_markup=elementmarkup_unreg)
+                                         reply_markup=elementmarkup_unreg)
                     elif text == "Личный кабинет":
                         inlk.append(chat_id)
                         bot.send_message(chat_id, "Ваш личный кабинет", reply_markup=elementmarkup_lk)
@@ -211,7 +214,7 @@ def echo_message(message):
                     try:
                         conn = sqlite3.connect("mydatabase.db")
                         cursor = conn.cursor()
-                        cursor.execute("INSERT INTO chats(chat_id) VALUES ('" + str(chat_id) + "');")
+                        cursor.execute("INSERT INTO chats(chat_id) VALUES (?);", (str(chat_id),))
                         conn.commit()
                         conn.close()
                         bot.send_message(chat_id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
@@ -231,21 +234,20 @@ def echo_message(message):
                         conn.commit()
                         conn.close()
                         bot.send_message(chat_id, "Теперь Вам доступен личный кабинет и будет приходить рассылка",
-                                        reply_markup=elementmarkup_reg)
+                                         reply_markup=elementmarkup_reg)
                     else:
                         bot.send_message(chat_id, "Только для личных чатов",
-                                        reply_markup=elementmarkup_unreg)
+                                         reply_markup=elementmarkup_unreg)
                 elif text == "Про нас":
                     bot.send_message(chat_id,
-                                    "Арт-лаборатория ELEMENT\n\nПрофессиональные "
-                                    "шоу программы и анимация на любое торжество. "
-                                    "Оригинальные, яркие, запоминающиеся!\n\n🔥    "
-                                    "Огненное шоу\n💡    Светодиодное шоу\n ⚡️   Электрич"
-                                    "еское шоу\n 💨   Шоу Ветра\n 🔦   Проекционное шоу\n🚨    Пиксел"
-                                    "ьное шоу\n🎀    Шоу гимнасток\n🔮    Контактное жонглирование\n🎪    Ходули"
-                                    "сты, мимы, жонглеры, леди-фуршет, живые статуи",
-                                    reply_markup=elementmarkup_soc)
-
+                                     "Арт-лаборатория ELEMENT\n\nПрофессиональные "
+                                     "шоу программы и анимация на любое торжество. "
+                                     "Оригинальные, яркие, запоминающиеся!\n\n🔥    "
+                                     "Огненное шоу\n💡    Светодиодное шоу\n ⚡️   Электрич"
+                                     "еское шоу\n 💨   Шоу Ветра\n 🔦   Проекционное шоу\n🚨    Пиксел"
+                                     "ьное шоу\n🎀    Шоу гимнасток\n🔮    Контактное жонглирование\n🎪    Ходули"
+                                     "сты, мимы, жонглеры, леди-фуршет, живые статуи",
+                                     reply_markup=elementmarkup_soc)
 
 
 bot.polling()
