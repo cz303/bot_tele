@@ -375,7 +375,14 @@ def less_day(call):
         cursor.execute("update stats set number = number+" + str(k) + " where stat = 'mass_messages';")
         conn.commit()
         conn.close()
-        bot.edit_message_text("*Отправлено: *\n\n" + text + "\n\nВсего отправлено: " + str(k) + " сообщений", call.message.chat.id,
+        if call.from_user.username:
+            text = "*Отправлено: *\n\n" + text + "\n\nВсего отправлено: " + str(k) + " сообщений"\
+                   + "\n\nПользователем: [" + call.from_user.first_name \
+                   + "](https://t.me/" + call.from_user.username + ")"
+        else:
+            text = "*Отправлено: *\n\n" + text + "\n\nВсего отправлено: " + str(k) + " сообщений"\
+                   + "\n\nПользователем: " + call.from_user.first_name
+        bot.edit_message_text(text, call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
         setmessage.remove(call.message.chat.id)
     except:
