@@ -31,19 +31,18 @@ stopmarkup = types.InlineKeyboardMarkup()
 stopmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
 
 sendmarkup = types.InlineKeyboardMarkup()
-sendmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
 sendmarkup.add(types.InlineKeyboardButton(text="Отправить", callback_data="send"))
+sendmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
+
 
 elementmarkup_unreg = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 elementmarkup_unreg.add('Про нас', 'Подписка на бота')
 
 elementmarkup_soc = types.InlineKeyboardMarkup()
-callback_button = types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show/")
-elementmarkup_soc.add(callback_button)
-callback_button = types.InlineKeyboardButton(text="ВКонтакте", url="https://vk.com/club92907131")
-elementmarkup_soc.add(callback_button)
-callback_button = types.InlineKeyboardButton(text="Официальный сайт", url="http://deliriumshow.com/")
-elementmarkup_soc.add(callback_button)
+elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show/"))
+elementmarkup_soc.add(types.InlineKeyboardButton(text="ВКонтакте", url="https://vk.com/club92907131"))
+elementmarkup_soc.add(types.InlineKeyboardButton(text="Официальный сайт", url="http://deliriumshow.com/"))
+
 
 adminmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 adminmarkup.add('Массовая рассылка', 'Статистика')
@@ -358,6 +357,7 @@ def less_day(call):
     bot.answer_callback_query(call.id, text="Сообщения отправляются")
     setmessage.remove(call.message.chat.id)
     k = 0
+    text = call.message.text[1:]
     conn = sqlite3.connect("mydatabase.db")
     cursor = conn.cursor()
     for row in cursor.execute("select chat_id, name from chats where status = 1"):
