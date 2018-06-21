@@ -43,7 +43,7 @@ adminmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 adminmarkup.add('Массовая рассылка', 'Статистика')
 
 staticmarkup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
-staticmarkup.add('Статистика сервера', 'Подписки на бота', 'Назад')
+staticmarkup.add('Статистика сервера', 'Подписки на бота', 'Работа бота', 'Назад')
 
 yn_markup = types.ReplyKeyboardMarkup(one_time_keyboard=False)
 yn_markup.add('Да', 'Нет', 'Хватит')
@@ -119,6 +119,12 @@ def echo_message(message):
     chat_type = str(message.chat.type)
     chat_id = message.chat.id
 
+    conn = sqlite3.connect("mydatabase.db")
+    cursor = conn.cursor()
+    cursor.execute("update stats set number = number+1 where stat = 'messages';")
+    conn.commit()
+    conn.close()
+
     if chat_id in adminchatid:
         logging.info("Incoming message on admin chat" + str(message) + " time:" + str(datetime.now()))
     else:
@@ -147,6 +153,8 @@ def echo_message(message):
                         bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
                                          parse_mode='MARKDOWN', disable_web_page_preview=True, reply_markup=likemarkup)
                         k = k + 1
+                    cursor.execute("update stats set number = number+" + str(k) + " where stat = 'mass_messages';")
+                    conn.commit()
                     conn.close()
                     bot.send_message(chat_id, "Отправил *" + str(k) + "* сообщений, "
                                                                       "продолжим...",
@@ -197,6 +205,15 @@ def echo_message(message):
                             "select (case when status = 0 then 'Пользователей' "
                             "when status = 1 then 'Зарегистрированных пользователей' "
                             "else 'Администраторов' end) as label,count(chat_id) from chats group by label;"):
+                        message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
+                    conn.close()
+                    bot.send_message(chat_id, message, parse_mode='MARKDOWN')
+                elif text == 'Работа бота':
+                    message = '*Показатели:*\n'
+                    conn = sqlite3.connect("mydatabase.db")
+                    cursor = conn.cursor()
+                    for row in cursor.execute(
+                            "select name, number from stats;"):
                         message = message + str(row[0]) + ": *" + str(row[1]) + "*\n"
                     conn.close()
                     bot.send_message(chat_id, message, parse_mode='MARKDOWN')
@@ -293,12 +310,22 @@ def echo_message(message):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'like')
 def like(call):
+    conn = sqlite3.connect("mydatabase.db")
+    cursor = conn.cursor()
+    cursor.execute("update stats set number = number+1 where stat = 'likes';")
+    conn.commit()
+    conn.close()
     bot.answer_callback_query(call.id, text="Спасибо за отзыв")
     bot.edit_message_text(call.message.text, call.from_user.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'dislike')
 def dislike(call):
+    conn = sqlite3.connect("mydatabase.db")
+    cursor = conn.cursor()
+    cursor.execute("update stats set number = number+1 where stat = 'dislikes';")
+    conn.commit()
+    conn.close()
     bot.answer_callback_query(call.id, text="Спасибо за отзыв")
     bot.edit_message_text(call.message.text, call.from_user.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
