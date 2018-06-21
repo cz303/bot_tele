@@ -358,6 +358,7 @@ def less_day(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'send')
 def less_day(call):
     bot.answer_callback_query(call.id, text="Сообщения отправляются")
+    logging.info("Incoming message on admin chat" + str(call) + " time:" + str(datetime.now()))
     try:
         k = 0
         text = call.message.text#.lstrip('*Собщение для отправки:*\n\n')
