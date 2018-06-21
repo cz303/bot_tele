@@ -367,7 +367,7 @@ def less_day(call):
     cursor.execute("update stats set number = number+" + str(k) + " where stat = 'mass_messages';")
     conn.commit()
     conn.close()
-    bot.edit_message_text("*Отправлено: *\n" + call.message.text + "\n\nВсего: " + str(k) + " сообщений", call.message.chat.id,
+    bot.edit_message_text("*Отправлено: *\n" + text + "\n\nВсего отправлено: " + str(k) + " сообщений", call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
 
 for admin_chat_id in adminchatid:
