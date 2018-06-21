@@ -350,27 +350,31 @@ def less_day(call):
     bot.answer_callback_query(call.id, text="Отправка отменена")
     try:
         setmessage.remove(call.message.chat.id)
-    bot.edit_message_text("Отправка массовой рассылки отменена", call.message.chat.id,
+        bot.edit_message_text("Отправка массовой рассылки отменена", call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
+    except:
+        pass
 
 @bot.callback_query_handler(func=lambda call: call.data == 'send')
 def less_day(call):
     bot.answer_callback_query(call.id, text="Сообщения отправляются")
     try:
         setmessage.remove(call.message.chat.id)
-    k = 0
-    text = str(call.message.text.lstrip('*Собщение для отправки:*\n\n'))
-    conn = sqlite3.connect("mydatabase.db")
-    cursor = conn.cursor()
-    for row in cursor.execute("select chat_id, name from chats where status = 1"):
-        bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
+        k = 0
+        text = str(call.message.text.lstrip('*Собщение для отправки:*\n\n'))
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        for row in cursor.execute("select chat_id, name from chats where status = 1"):
+            bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
                          parse_mode='MARKDOWN', disable_web_page_preview=True, reply_markup=likemarkup)
-        k = k + 1
-    cursor.execute("update stats set number = number+" + str(k) + " where stat = 'mass_messages';")
-    conn.commit()
-    conn.close()
-    bot.edit_message_text("*Отправлено: *\n" + text + "\n\nВсего отправлено: " + str(k) + " сообщений", call.message.chat.id,
-                          call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
+            k = k + 1
+        cursor.execute("update stats set number = number+" + str(k) + " where stat = 'mass_messages';")
+        conn.commit()
+        conn.close()
+        bot.edit_message_text("*Отправлено: *\n" + text + "\n\nВсего отправлено: " + str(k) + " сообщений", call.message.chat.id,
+                              call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
+    except:
+        pass
 
 for admin_chat_id in adminchatid:
     bot.send_chat_action(admin_chat_id, 'typing')
