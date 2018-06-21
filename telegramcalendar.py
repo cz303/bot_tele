@@ -30,7 +30,7 @@ def create_calendar(year,month):
         markup.row(*row)
     #Last row - Buttons
     row=[]
-    now = datetime.datetime.now()
+    now = datetime.now()
     if now.strftime("%m.%Y") > datetime.strptime(month+year, "%m.%Y"):
         row.append(types.InlineKeyboardButton("<",callback_data="previous-month"))
     else:
