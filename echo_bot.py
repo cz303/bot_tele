@@ -174,8 +174,8 @@ def echo_message(message):
                     bot.send_message(chat_id, reply, parse_mode='MARKDOWN', disable_web_page_preview=True)
             if chat_id in setmessage:
                 if text != 'Массовая рассылка':
-                    label = "*Собщение для отправки:*\n\n"
-                    bot.send_message(chat_id, label + text, parse_mode='MARKDOWN',
+                    label = "Собщение для отправки:\n\n"
+                    bot.send_message(chat_id, label + text,
                                           reply_markup=sendmarkup, disable_web_page_preview=True)
         else:
             if chat_id in userchatid:
@@ -361,7 +361,7 @@ def less_day(call):
     logging.info("Incoming message on admin chat" + str(call) + " time:" + str(datetime.now()))
     try:
         k = 0
-        text = call.message.text.lstrip('*Собщение для отправки:*\n\n')
+        text = call.message.text.lstrip('Собщение для отправки:\n\n')
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
         for row in cursor.execute("select chat_id, name from chats where status = 1"):
