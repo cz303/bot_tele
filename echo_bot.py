@@ -11,7 +11,7 @@ import sqlite3
 from telebot import types
 from telegramcalendar import create_calendar
 import psutil
-import operator
+import time
 
 logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
 
@@ -397,4 +397,17 @@ try:
 except:
     pass
 
-bot.polling()
+while True:
+
+    try:
+
+        bot.polling(none_stop=True)
+
+    # ConnectionError and ReadTimeout because of possible timout of the requests library
+
+    # TypeError for moviepy errors
+
+    # maybe there are others, therefore Exception
+
+    except:
+        time.sleep(15)
