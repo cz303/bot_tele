@@ -101,7 +101,7 @@ elementmarkup_unreg = types.ReplyKeyboardMarkup(row_width=1)
 elementmarkup_unreg.add('Про нас', 'Подписка на бота')
 
 elementmarkup_lk = types.ReplyKeyboardMarkup(row_width=1)
-elementmarkup_lk.add('Заказать прайслист','Предварительный заказ', 'Календарь', 'Назад')
+elementmarkup_lk.add('Заказать прайслист', 'Предварительный заказ', 'Назад')
 
 likemarkup = types.InlineKeyboardMarkup()
 row=[]
