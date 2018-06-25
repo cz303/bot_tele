@@ -20,6 +20,8 @@ current_shown_dates={}
 setmessage = []
 viewstatic = []
 inlk = []
+inorder = []
+current_step = []
 
 userchatid = []
 adminchatid = []
@@ -28,19 +30,30 @@ graphstart = datetime.now()
 rules = "*Жирный*\n_Курсив_\n[Отображаемое имя ссылки](Адрес ссылки, пример https://ya.ru)"
 
 ordermarkup = types.InlineKeyboardMarkup()
-ordermarkup.add(types.InlineKeyboardButton(text="Продолжить", callback_data="order_next"))
-ordermarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="order_back"))
+row=[]
+row.add(types.InlineKeyboardButton(text="➕ Задать шоу", callback_data="order_show"))
+row.add(types.InlineKeyboardButton(text="➕ Задать дату", callback_data="order_date"))
+ordermarkup.row(*row)
+row.add(types.InlineKeyboardButton(text="➕ Задать время", callback_data="order_time"))
+row.add(types.InlineKeyboardButton(text="➕ Задать место", callback_data="order_place"))
+ordermarkup.row(*row)
+row.add(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
+row.add(types.InlineKeyboardButton(text="🔙 Завершить", callback_data="order_back"))
+ordermarkup.row(*row)
 
 stopmarkup = types.InlineKeyboardMarkup()
-stopmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
+stopmarkup.add(types.InlineKeyboardButton(text="🔙 Завершить", callback_data="back"))
 
 sendmarkup = types.InlineKeyboardMarkup()
-sendmarkup.add(types.InlineKeyboardButton(text="Отправить", callback_data="send"))
-sendmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
+sendmarkup.add(types.InlineKeyboardButton(text="☑ Отправить", callback_data="send"))
+sendmarkup.add(types.InlineKeyboardButton(text="🔙 Отменить", callback_data="back"))
 
 elementmarkup_unreg = types.ReplyKeyboardMarkup(row_width=1)
 elementmarkup_unreg.add(types.KeyboardButton('Про нас'))
 elementmarkup_unreg.add(types.KeyboardButton('Подписка на бота'))
+
+stopkeyboardmarkup = types.ReplyKeyboardMarkup(row_width=1)
+stopkeyboardmarkup.add(types.KeyboardButton('Завершить'))
 
 elementmarkup_soc = types.InlineKeyboardMarkup()
 elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show"))
@@ -85,12 +98,6 @@ for row in cursor.execute("select chat_id from chats where status = 1;"):
     userchatid.append(float(row[0]))
 conn.close()
 
-def clearall(chat_id):
-    if chat_id in setmessage:
-        setmessage.remove(chat_id)
-    if chat_id in viewstatic:
-        viewstatic.remove(chat_id)
-
 def RepresentsInt(s):
     try:
         int(s)
@@ -104,19 +111,28 @@ def xstr(s):
     else:
         return str(s)
 
-def order(header = None,
+def which_step(s):
+    step = s[4:5]
+    if RepresentsInt(step):
+        return int(step)
+    else:
+        return 1
+
+def order(step = 1,
+          header = None,
           date = None,
           time = None,
           place = None,
           comment = None,
           customer = None):
+    order_step = "Шаг " + xstr(step) + "\n"
     order_header = "*Шоу:* " + xstr(header) + "\n"
     order_date = "*Дата:* " + xstr(date) + "\n"
     order_time = "*Время:* " + xstr(time) + "\n"
     order_place = "*Место:* " + xstr(place) + "\n"
     order_comment = "*Ваш комментарий:* " + xstr(comment) + "\n"
     order_customer = "*Заказчик:* " + xstr(customer) + "\n"
-    order = order_header + order_date + order_time + order_place + order_comment + order_customer
+    order = order_step + order_header + order_date + order_time + order_place + order_comment + order_customer
     return order
 
 def hello(name):
@@ -201,7 +217,13 @@ def echo_message(message):
                                           reply_markup=sendmarkup, disable_web_page_preview=True)
         else:
             if chat_id in userchatid:
-                if chat_id in inlk:
+                if chat_id in inorder:
+                    if text == "Завершить":
+                        inorder.remove(chat_id)
+                    else:
+                        if current_step[chat_id] == 1:
+                            print("Хм-м")
+                elif chat_id in inlk:
                     if text == "Заказать прайслист":
                         try:
                             f = open('/root/bot_tele/etc/element_show_prices.pdf', 'rb', )
@@ -220,7 +242,9 @@ def echo_message(message):
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
-                        bot.send_message(message.chat.id, order(" _Укажите шоу_"), parse_mode='MARKDOWN', reply_markup=ordermarkup)
+                        inorder.append(chat_id)
+                        current_step[chat_id] = 1
+                        bot.send_message(message.chat.id, order(step=current_step[chat_id], header=" _Укажите шоу_"), parse_mode='MARKDOWN', reply_markup=stopkeyboardmarkup)
                     elif text == 'Календарь':
                         now = datetime.now()  # Current date
                         chat_id = message.chat.id
@@ -407,6 +431,7 @@ def less_day(call):
         setmessage.remove(call.message.chat.id)
     except:
         pass
+
 try:
     for admin_chat_id in adminchatid:
         bot.send_chat_action(admin_chat_id, 'typing')
