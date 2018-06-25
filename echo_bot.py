@@ -486,12 +486,9 @@ def less_day(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_header')
 def less_day(call):
-    try:
-        inorderheader.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Укажите название шоу из прайса", parse_mode='MARKDOWN',
+    inorderheader.append(call.message.chat.id)
+    bot.send_message(call.message.chat.id, "Укажите название шоу из прайса", parse_mode='MARKDOWN',
                          disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
-    except:
-        pass
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_place')
 def less_day(call):
