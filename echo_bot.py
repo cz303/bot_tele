@@ -543,7 +543,7 @@ def less_day(call):
 def less_day(call):
     try:
         inorderplace.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Отправьте мне проведения шоу с указанием адреса", parse_mode='MARKDOWN',
+        bot.send_message(call.message.chat.id, "Отправьте мне место проведения шоу с указанием адреса", parse_mode='MARKDOWN',
                          disable_web_page_preview=True)
     except:
         pass
