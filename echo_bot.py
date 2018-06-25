@@ -104,12 +104,12 @@ def order(header = None,
           place = None,
           comment = None,
           customer = None):
-    order_header = "*Шоу:* " + header + "\n"
-    order_date = "*Дата:* " + date + "\n"
-    order_time = "*Время:* " + time + "\n"
-    order_place = "*Место:* " + place + "\n"
-    order_comment = "*Ваш комментарий:* " + comment + "\n"
-    order_customer = "*Заказчик:* " + customer + "\n"
+    order_header = "*Шоу:* " + str(header) + "\n"
+    order_date = "*Дата:* " + str(date) + "\n"
+    order_time = "*Время:* " + str(time) + "\n"
+    order_place = "*Место:* " + str(place) + "\n"
+    order_comment = "*Ваш комментарий:* " + str(comment) + "\n"
+    order_customer = "*Заказчик:* " + str(customer) + "\n"
     order = order_header + order_date + order_time + order_place + order_comment + order_customer
     return order
 
