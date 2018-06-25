@@ -133,12 +133,11 @@ def xstr(s):
     else:
         return str(s)
 
-def which_step(s):
-    step = s[4:5]
-    if RepresentsInt(step):
-        return int(step)
+def is_str(s):
+    if s is None or s == 'None':
+        return False
     else:
-        return 1
+        return True
 
 def order(header = None,
           date = None,
@@ -156,7 +155,7 @@ def order(header = None,
     return order
 
 def check_order(header, date, time, place, comment):
-    if header and date and time and place and comment:
+    if is_str(header) and is_str(date) and is_str(time) and is_str(place) and is_str(comment):
         return True
     else:
         return False
