@@ -78,6 +78,9 @@ elementmarkup_unreg.add(types.KeyboardButton('Подписка на бота'))
 stopkeyboardmarkup = types.ReplyKeyboardMarkup(row_width=1)
 stopkeyboardmarkup.add(types.KeyboardButton('Завершить'))
 
+contactkeyboardmarkup = types.ReplyKeyboardMarkup(row_width=1)
+contactkeyboardmarkup.add(types.KeyboardButton('Отправить мой номер телефона', request_contact=True))
+
 elementmarkup_soc = types.InlineKeyboardMarkup()
 elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show"))
 elementmarkup_soc.add(types.InlineKeyboardButton(text="ВКонтакте", url="https://vk.com/club92907131"))
@@ -632,7 +635,7 @@ def less_day(call):
 try:
     for admin_chat_id in adminchatid:
         bot.send_chat_action(admin_chat_id, 'typing')
-        bot.send_message(admin_chat_id, "Я запущен!", reply_markup=adminmarkup)
+        bot.send_message(admin_chat_id, "Я запущен!", reply_markup=contactkeyboardmarkup)
 except:
     pass
 
