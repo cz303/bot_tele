@@ -214,7 +214,7 @@ def echo_message(message):
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
-                        bot.send_message(message.chat.id, order(), reply_markup=ordermarkup)
+                        bot.send_message(message.chat.id, order(), parse_mode='MARKDOWN', reply_markup=ordermarkup)
                     elif text == 'Календарь':
                         now = datetime.now()  # Current date
                         chat_id = message.chat.id
