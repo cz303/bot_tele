@@ -218,7 +218,43 @@ def echo_message(message):
                                           reply_markup=sendmarkup, disable_web_page_preview=True)
         else:
             if chat_id in userchatid:
-                if chat_id in inlk:
+                if chat_id in inorderheader:
+                    if text == "Завершить":
+                        bot.send_message(chat_id,
+                                         "Завершение редактирования названия шоу",
+                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
+                    else:
+                        cursor.execute(
+                            "update orders set header = '" + text + "' where chat_id = "
+                            + str(chat_id) + " and status = 0;")
+                        conn.commit()
+                        bot.edit_message_text(chat_id, "Шоу задано упешно", parse_mode='MARKDOWN',
+                                              reply_markup=elementmarkup_reg)
+                elif chat_id in inorderplace:
+                    if text == "Завершить":
+                        bot.send_message(chat_id,
+                                         "Завершение редактирования места проведения шоу",
+                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
+                    else:
+                        cursor.execute(
+                            "update orders set place = '" + text + "' where chat_id = "
+                            + str(chat_id) + " and status = 0;")
+                        conn.commit()
+                        bot.edit_message_text(chat_id, "Место проведения шоу задано упешно", parse_mode='MARKDOWN',
+                                              reply_markup=elementmarkup_reg)
+                elif chat_id in inordercomment:
+                    if text == "Завершить":
+                        bot.send_message(chat_id,
+                                         "Завершение редактирования комментария к заказу",
+                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
+                    else:
+                        cursor.execute(
+                            "update orders set comment = '" + text + "' where chat_id = "
+                            + str(chat_id) + " and status = 0;")
+                        conn.commit()
+                        bot.edit_message_text(chat_id, "Комментарий к заказу упешно задан", parse_mode='MARKDOWN',
+                                              reply_markup=elementmarkup_reg)
+                elif chat_id in inlk:
                     if text == "Заказать прайслист":
                         try:
                             f = open('/root/bot_tele/etc/element_show_prices.pdf', 'rb', )
@@ -242,13 +278,6 @@ def echo_message(message):
                         conn.commit()
                         bot.send_message(message.chat.id, order(header="_Укажите шоу_"), parse_mode='MARKDOWN',
                                          reply_markup=ordermarkup)
-                    elif text == 'Календарь':
-                        now = datetime.now()  # Current date
-                        chat_id = message.chat.id
-                        date = (now.year, now.month)
-                        current_shown_dates[chat_id] = date  # Saving the current date in a dict
-                        markup = create_calendar(now.year, now.month)
-                        bot.send_message(message.chat.id, "Пожалуйста, выберете дату", reply_markup=markup)
                 else:
                     if text == "Про нас":
                         bot.send_message(chat_id,
@@ -446,8 +475,11 @@ def less_day(call):
         cursor = conn.cursor()
         cursor.execute("update orders set status = 1 where chat_id = " + str(call.message.chat.id) + ";")
         conn.commit()
+        for row in cursor.execute("select header, date, time, place, comment from orders where chat_id = "
+                                  + str(call.message.chat.id) + " and status = 0 limit 1;"):
+            text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
         conn.close()
-        bot.edit_message_text("*Предварительный заказ отменен*", call.message.chat.id,
+        bot.edit_message_text(text + "\n\n*Предварительный заказ отменен*", call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
     except:
         pass
@@ -456,8 +488,8 @@ def less_day(call):
 def less_day(call):
     try:
         inorderheader.append(call.message.chat.id)
-        bot.send_message("Укажите название шоу из прайса", call.message.chat.id, parse_mode='MARKDOWN',
-                         disable_web_page_preview=True)
+        bot.send_message(call.message.chat.id, "Укажите название шоу из прайса", parse_mode='MARKDOWN',
+                         disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
     except:
         pass
 
@@ -465,8 +497,8 @@ def less_day(call):
 def less_day(call):
     try:
         inorderplace.append(call.message.chat.id)
-        bot.send_message("Укажите место проведения шоу с указанием адреса", call.message.chat.id, parse_mode='MARKDOWN',
-                         disable_web_page_preview=True)
+        bot.send_message(call.message.chat.id, "Укажите место проведения шоу с указанием адреса", parse_mode='MARKDOWN',
+                         disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
     except:
         pass
 
@@ -474,7 +506,8 @@ def less_day(call):
 def less_day(call):
     try:
         inordercomment.append(call.message.chat.id)
-        bot.send_message("Укажите комментарий", call.message.chat.id, parse_mode='MARKDOWN', disable_web_page_preview=True)
+        bot.send_message(call.message.chat.id, "Укажите комментарий", call.message.chat.id, parse_mode='MARKDOWN',
+                         disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
     except:
         pass
 
