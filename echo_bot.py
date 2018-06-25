@@ -142,7 +142,7 @@ def is_str(s):
 
 def is_time(s):
     result = re.findall(r'[0,1,2]\d{1}[:][0,1,2,3,4,5]\d{1}', '18:00')
-    if result:
+    if len(result) > 0:
         return True
     else:
         return False
