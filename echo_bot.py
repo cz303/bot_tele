@@ -235,6 +235,7 @@ def echo_message(message):
             if chat_id in userchatid:
                 if chat_id in inorderheader:
                     if text == "Завершить":
+                        inorderheader.remove(chat_id)
                         bot.send_message(chat_id,
                                          "Завершение редактирования названия шоу",
                                          parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
@@ -243,10 +244,12 @@ def echo_message(message):
                             "update orders set header = '" + text + "' where chat_id = "
                             + str(chat_id) + " and status = 0;")
                         conn.commit()
-                        bot.edit_message_text(chat_id, "Шоу задано упешно", parse_mode='MARKDOWN',
+                        inorderheader.remove(chat_id)
+                        bot.send_message(chat_id, "Шоу задано упешно", parse_mode='MARKDOWN',
                                               reply_markup=elementmarkup_reg)
                 elif chat_id in inorderplace:
                     if text == "Завершить":
+                        inorderplace.remove(chat_id)
                         bot.send_message(chat_id,
                                          "Завершение редактирования места проведения шоу",
                                          parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
@@ -255,10 +258,12 @@ def echo_message(message):
                             "update orders set place = '" + text + "' where chat_id = "
                             + str(chat_id) + " and status = 0;")
                         conn.commit()
-                        bot.edit_message_text(chat_id, "Место проведения шоу задано упешно", parse_mode='MARKDOWN',
+                        inorderplace.remove(chat_id)
+                        bot.send_message(chat_id, "Место проведения шоу задано упешно", parse_mode='MARKDOWN',
                                               reply_markup=elementmarkup_reg)
                 elif chat_id in inordercomment:
                     if text == "Завершить":
+                        inordercomment.remove(chat_id)
                         bot.send_message(chat_id,
                                          "Завершение редактирования комментария к заказу",
                                          parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
@@ -267,7 +272,8 @@ def echo_message(message):
                             "update orders set comment = '" + text + "' where chat_id = "
                             + str(chat_id) + " and status = 0;")
                         conn.commit()
-                        bot.edit_message_text(chat_id, "Комментарий к заказу упешно задан", parse_mode='MARKDOWN',
+                        inordercomment.remove(chat_id)
+                        bot.send_message(chat_id, "Комментарий к заказу упешно задан", parse_mode='MARKDOWN',
                                               reply_markup=elementmarkup_reg)
                 elif chat_id in inlk:
                     if text == "Заказать прайслист":
