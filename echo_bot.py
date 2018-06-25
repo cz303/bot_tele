@@ -43,7 +43,7 @@ row.append(types.InlineKeyboardButton(text="➕ Задать место", callba
 ordermarkup.row(*row)
 row=[]
 row.append(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
-row.append(types.InlineKeyboardButton(text="🔙 Завершить", callback_data="order_back"))
+row.append(types.InlineKeyboardButton(text="🔙 Отменить", callback_data="order_back"))
 ordermarkup.row(*row)
 
 ordersendmarkup = types.InlineKeyboardMarkup()
@@ -57,7 +57,7 @@ row.append(types.InlineKeyboardButton(text="➕ Задать место", callba
 ordersendmarkup.row(*row)
 row=[]
 row.append(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
-row.append(types.InlineKeyboardButton(text="🔙 Завершить", callback_data="order_back"))
+row.append(types.InlineKeyboardButton(text="🔙 Отменить", callback_data="order_back"))
 ordersendmarkup.row(*row)
 ordersendmarkup.add(types.InlineKeyboardButton(text="☑ Отправить", callback_data="order_send"))
 
@@ -141,7 +141,7 @@ def is_str(s):
         return True
 
 def is_time(s):
-    result = re.findall(r'[0,1,2]\d{1}[:][0,1,2,3,4,5]\d{1}', s)
+    result = re.findall(r'[0,1,2][0,1,2,3,4][:][0,1,2,3,4,5]\d{1}', s)
     if len(result) > 0:
         return True
     else:
@@ -536,14 +536,14 @@ def less_day(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'order_header')
 def less_day(call):
     inorderheader.append(call.message.chat.id)
-    bot.send_message(call.message.chat.id, "Укажите название шоу из прайса", parse_mode='MARKDOWN',
+    bot.send_message(call.message.chat.id, "Отправьте мне название шоу из прайса", parse_mode='MARKDOWN',
                          disable_web_page_preview=True)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_place')
 def less_day(call):
     try:
         inorderplace.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Укажите место проведения шоу с указанием адреса", parse_mode='MARKDOWN',
+        bot.send_message(call.message.chat.id, "Отправьте мне проведения шоу с указанием адреса", parse_mode='MARKDOWN',
                          disable_web_page_preview=True)
     except:
         pass
@@ -552,7 +552,7 @@ def less_day(call):
 def less_day(call):
     try:
         inordercomment.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Укажите комментарий", parse_mode='MARKDOWN',
+        bot.send_message(call.message.chat.id, "Отправьте мне комментарий к заказу", parse_mode='MARKDOWN',
                          disable_web_page_preview=True)
     except:
         pass
@@ -561,7 +561,7 @@ def less_day(call):
 def less_day(call):
     try:
         inordertime.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Укажите время\nВ формате ЧЧ:ММ", parse_mode='MARKDOWN',
+        bot.send_message(call.message.chat.id, "Отправьте мне время заказа\nВ формате ЧЧ:ММ", parse_mode='MARKDOWN',
                          disable_web_page_preview=True)
     except:
         pass
@@ -625,8 +625,9 @@ def less_day(call):
         bot.edit_message_text(text + "\n *Предзаказ отправлен*", call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
         for admin_chat_id in adminchatid:
-            bot.send_message(admin_chat_id, "Клиент сделал предзаказ\n\n" + text, parse_mode='MARKDOWN',
+            bot.send_message(admin_chat_id, "Клиент сделал предзаказ", parse_mode='MARKDOWN',
                              disable_web_page_preview=True)
+            bot.forward_message(admin_chat_id, call.message.chat.id, call.message.message_id)
 
 try:
     for admin_chat_id in adminchatid:
