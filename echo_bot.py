@@ -20,8 +20,9 @@ current_shown_dates={}
 setmessage = []
 viewstatic = []
 inlk = []
-inorder = []
-current_step = []
+inorderheader = []
+inorderplace = []
+inordercomment = []
 
 userchatid = []
 adminchatid = []
@@ -217,13 +218,7 @@ def echo_message(message):
                                           reply_markup=sendmarkup, disable_web_page_preview=True)
         else:
             if chat_id in userchatid:
-                if chat_id in inorder:
-                    if text == "Завершить":
-                        inorder.remove(chat_id)
-                    else:
-                        if current_step[chat_id] == 1:
-                            print("Хм-м")
-                elif chat_id in inlk:
+                if chat_id in inlk:
                     if text == "Заказать прайслист":
                         try:
                             f = open('/root/bot_tele/etc/element_show_prices.pdf', 'rb', )
@@ -242,7 +237,8 @@ def echo_message(message):
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
-                        inorder.append(chat_id)
+                        cursor.execute("INSERT INTO orders(chat_id) VALUES (" + str(chat_id) + ");")
+                        conn.commit()
                         bot.send_message(message.chat.id, order(header=" _Укажите шоу_"), parse_mode='MARKDOWN',
                                          reply_markup=ordermarkup)
                     elif text == 'Календарь':
@@ -339,8 +335,16 @@ def get_day(call):
     saved_date = current_shown_dates.get(chat_id)
     if(saved_date is not None):
         day=call.data[13:]
-        date = datetime(int(saved_date[0]),int(saved_date[1]),int(day))
-        bot.edit_message_text("Вы выбрали: *" + str(date.strftime("%d.%m.%Y")) + "*", call.from_user.id, call.message.message_id, parse_mode='MARKDOWN')
+        date = datetime(int(saved_date[0]), int(saved_date[1]), int(day))
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        cursor.execute("update orders set date = '" + str(date.strftime("%d.%m.%Y")) + "' where chat_id = " + str(call.message.chat.id) + " and status = 0;")
+        conn.commit()
+        for row in cursor.execute("select header, date, time, place, comment from orders chat_id = "
+                                  + str(call.message.chat.id) + " and status = 0 limit 1;"):
+            text = order(header=row[0], date=row[1], time=row[2], place=[3], comment=row[4])
+        conn.close()
+        bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN', reply_markup=ordermarkup)
         bot.answer_callback_query(call.id, text="Дата выбрана")
     else:
         pass
@@ -358,7 +362,7 @@ def next_month(call):
         date = (year,month)
         current_shown_dates[chat_id] = date
         markup= create_calendar(year,month)
-        bot.edit_message_text("Пожалуйста, выберете дату", call.from_user.id, call.message.message_id, reply_markup=markup)
+        bot.edit_message_text(call.message.text, call.from_user.id, call.message.message_id, reply_markup=markup)
         bot.answer_callback_query(call.id, text="")
     else:
         pass
@@ -376,7 +380,7 @@ def previous_month(call):
         date = (year,month)
         current_shown_dates[chat_id] = date
         markup= create_calendar(year,month)
-        bot.edit_message_text("Пожалуйста, выберете дату", call.from_user.id, call.message.message_id, reply_markup=markup)
+        bot.edit_message_text(call.message.text, call.from_user.id, call.message.message_id, reply_markup=markup)
         bot.answer_callback_query(call.id, text="")
     else:
         pass
@@ -436,8 +440,53 @@ def less_day(call):
 def less_day(call):
     try:
         bot.answer_callback_query(call.id, text="Предварительный заказ отменен")
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        cursor.execute("update orders set status = 1 where chat_id = " + str(call.message.chat.id) + ";")
+        conn.commit()
+        conn.close()
         bot.edit_message_text("*Предварительный заказ отменен*", call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
+    except:
+        pass
+
+@bot.callback_query_handler(func=lambda call: call.data == 'order_header')
+def less_day(call):
+    try:
+        inorderheader.append(call.message.chat.id)
+        bot.send_message("Укажите название шоу из прайса", call.message.chat.id, parse_mode='MARKDOWN',
+                         disable_web_page_preview=True)
+    except:
+        pass
+
+@bot.callback_query_handler(func=lambda call: call.data == 'order_place')
+def less_day(call):
+    try:
+        inorderplace.append(call.message.chat.id)
+        bot.send_message("Укажите место проведения шоу с указанием адреса", call.message.chat.id, parse_mode='MARKDOWN',
+                         disable_web_page_preview=True)
+    except:
+        pass
+
+@bot.callback_query_handler(func=lambda call: call.data == 'order_comment')
+def less_day(call):
+    try:
+        inordercomment.append(call.message.chat.id)
+        bot.send_message("Укажите комментарий", call.message.chat.id, parse_mode='MARKDOWN', disable_web_page_preview=True)
+    except:
+        pass
+
+@bot.callback_query_handler(func=lambda call: call.data == 'order_date')
+def less_day(call):
+    try:
+        bot.answer_callback_query(call.id, text="Выберете дату")
+        now = datetime.now()  # Current date
+        chat_id = call.message.chat.id
+        date = (now.year, now.month)
+        current_shown_dates[chat_id] = date  # Saving the current date in a dict
+        markup = create_calendar(now.year, now.month)
+        bot.edit_message_text(call.message.text, call.message.chat.id,
+                              call.message.message_id, parse_mode='MARKDOWN', reply_markup=markup)
     except:
         pass
 
