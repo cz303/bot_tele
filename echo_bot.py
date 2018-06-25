@@ -419,10 +419,15 @@ def get_day(call):
         for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
             text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
+            if check_order(row[0], row[1], row[2], row[3], row[4]):
+                bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
+                                      reply_markup=ordersendmarkup)
+                bot.answer_callback_query(call.id, text="Дата выбрана")
+            else:
+                bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
+                                      reply_markup=ordermarkup)
+                bot.answer_callback_query(call.id, text="Дата выбрана")
         conn.close()
-        bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
-                              reply_markup=ordersendmarkup)
-        bot.answer_callback_query(call.id, text="Дата выбрана")
     else:
         pass
 
@@ -583,9 +588,13 @@ def less_day(call):
         for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
             text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
+        if check_order(row[0], row[1], row[2], row[3], row[4]):
+            bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
+                                  reply_markup=ordersendmarkup)
+        else:
+            bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
+                                  reply_markup=ordermarkup)
         conn.close()
-        bot.edit_message_text(text, call.message.chat.id,
-                              call.message.message_id, parse_mode='MARKDOWN', reply_markup=ordersendmarkup)
     except:
         pass
 
