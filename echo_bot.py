@@ -529,7 +529,7 @@ def less_day(call):
 def less_day(call):
     try:
         inordercomment.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Укажите комментарий", call.message.chat.id, parse_mode='MARKDOWN',
+        bot.send_message(call.message.chat.id, "Укажите комментарий", parse_mode='MARKDOWN',
                          disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
     except:
         pass
