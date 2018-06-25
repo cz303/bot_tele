@@ -60,6 +60,9 @@ row.append(types.InlineKeyboardButton(text="🔙 Завершить", callback_d
 ordersendmarkup.row(*row)
 ordersendmarkup.add(types.InlineKeyboardButton(text="☑ Отправить", callback_data="order_send"))
 
+orderupdatemarkup = types.InlineKeyboardMarkup()
+orderupdatemarkup.add(types.InlineKeyboardButton(text="🔄 Вернуться к редактированию", callback_data="order_refresh"))
+
 stopmarkup = types.InlineKeyboardMarkup()
 stopmarkup.add(types.InlineKeyboardButton(text="🔙 Завершить", callback_data="back"))
 
@@ -247,7 +250,8 @@ def echo_message(message):
                         conn.commit()
                         inorderheader.remove(chat_id)
                         bot.send_message(chat_id, "Шоу задано упешно", parse_mode='MARKDOWN',
-                                              reply_markup=elementmarkup_reg)
+                                              reply_markup=orderupdatemarkup)
+
                 elif chat_id in inorderplace:
                     if text == "Завершить":
                         inorderplace.remove(chat_id)
@@ -261,7 +265,7 @@ def echo_message(message):
                         conn.commit()
                         inorderplace.remove(chat_id)
                         bot.send_message(chat_id, "Место проведения шоу задано упешно", parse_mode='MARKDOWN',
-                                              reply_markup=elementmarkup_reg)
+                                              reply_markup=orderupdatemarkup)
                 elif chat_id in inordercomment:
                     if text == "Завершить":
                         inordercomment.remove(chat_id)
@@ -275,7 +279,7 @@ def echo_message(message):
                         conn.commit()
                         inordercomment.remove(chat_id)
                         bot.send_message(chat_id, "Комментарий к заказу упешно задан", parse_mode='MARKDOWN',
-                                              reply_markup=elementmarkup_reg)
+                                              reply_markup=orderupdatemarkup)
                 elif chat_id in inordertime:
                     if text == "Завершить":
                         inordertime.remove(chat_id)
@@ -289,7 +293,7 @@ def echo_message(message):
                         conn.commit()
                         inordertime.remove(chat_id)
                         bot.send_message(chat_id, "Время заказа упешно задано", parse_mode='MARKDOWN',
-                                              reply_markup=elementmarkup_reg)
+                                              reply_markup=orderupdatemarkup)
                 elif chat_id in inlk:
                     if text == "Заказать прайслист":
                         try:
@@ -575,6 +579,20 @@ def less_day(call):
         conn.close()
         bot.edit_message_text(text, call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', reply_markup=markup)
+    except:
+        pass
+
+@bot.callback_query_handler(func=lambda call: call.data == 'order_refresh')
+def less_day(call):
+    try:
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
+                                  + str(call.message.chat.id) + " order by rowid desc limit 1;"):
+            text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
+        conn.close()
+        bot.edit_message_text(text, call.message.chat.id,
+                              call.message.message_id, parse_mode='MARKDOWN', reply_markup=ordersendmarkup)
     except:
         pass
 
