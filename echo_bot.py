@@ -155,6 +155,12 @@ def order(header = None,
     order = order_header + order_date + order_time + order_place + order_comment + order_customer
     return order
 
+def check_order(header, date, time, place, comment):
+    if header and date and time and place and comment:
+        return True
+    else:
+        return False
+
 def hello(name):
     phrase = ['Привет, ', 'Добрый день, ', 'Здравствуйте, ', 'Аллоха, ']
     i = random.randint(0, 3)
@@ -309,9 +315,14 @@ def echo_message(message):
                                     "select header, date, time, place, comment, rowid from orders where chat_id = "
                                     + str(chat_id) + " and status = 0 order by rowid desc limit 1;"):
                                 text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
-                            bot.send_message(chat_id, text,
+                                if check_order(row[0],row[1],row[2],row[4]):
+                                    bot.send_message(chat_id, text,
                                                   parse_mode='MARKDOWN',
-                                                  reply_markup=ordermarkup)
+                                                  reply_markup=ordersendmarkup)
+                                else:
+                                    bot.send_message(chat_id, text,
+                                                     parse_mode='MARKDOWN',
+                                                     reply_markup=ordermarkup)
 
                 else:
                     if text == "Про нас":
