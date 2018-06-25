@@ -23,6 +23,7 @@ inlk = []
 inorderheader = []
 inorderplace = []
 inordercomment = []
+inordertime = []
 
 userchatid = []
 adminchatid = []
@@ -274,6 +275,20 @@ def echo_message(message):
                         conn.commit()
                         inordercomment.remove(chat_id)
                         bot.send_message(chat_id, "Комментарий к заказу упешно задан", parse_mode='MARKDOWN',
+                                              reply_markup=elementmarkup_reg)
+                elif chat_id in inordertime:
+                    if text == "Завершить":
+                        inordertime.remove(chat_id)
+                        bot.send_message(chat_id,
+                                         "Завершение редактирования времени заказа",
+                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
+                    else:
+                        cursor.execute(
+                            "update orders set comment = '" + text + "' where chat_id = "
+                            + str(chat_id) + " and status = 0;")
+                        conn.commit()
+                        inordertime.remove(chat_id)
+                        bot.send_message(chat_id, "Время заказа упешно задано", parse_mode='MARKDOWN',
                                               reply_markup=elementmarkup_reg)
                 elif chat_id in inlk:
                     if text == "Заказать прайслист":
@@ -530,6 +545,15 @@ def less_day(call):
     try:
         inordercomment.append(call.message.chat.id)
         bot.send_message(call.message.chat.id, "Укажите комментарий", parse_mode='MARKDOWN',
+                         disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
+    except:
+        pass
+
+@bot.callback_query_handler(func=lambda call: call.data == 'order_time')
+def less_day(call):
+    try:
+        inordertime.append(call.message.chat.id)
+        bot.send_message(call.message.chat.id, "Укажите время", parse_mode='MARKDOWN',
                          disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
     except:
         pass
