@@ -655,7 +655,7 @@ def less_day(call):
                        + str(call.message.chat.id) + " and status = 0;")
         conn.commit()
         conn.close()
-        bot.edit_message_text(text + "\n *Предзаказ отправлен*", call.message.chat.id,
+        bot.edit_message_text(text + "\n*Предзаказ отправлен*", call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
         for admin_chat_id in adminchatid:
             bot.send_message(admin_chat_id, "Клиент сделал предзаказ", parse_mode='MARKDOWN',
