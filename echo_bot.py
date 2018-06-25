@@ -245,7 +245,8 @@ def echo_message(message):
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
                         inorder.append(chat_id)
-                        bot.send_message(message.chat.id, order(step=1, header=" _Укажите шоу_"), parse_mode='MARKDOWN', reply_markup=orderdmarkup)
+                        bot.send_message(message.chat.id, order(step=1, header=" _Укажите шоу_"), parse_mode='MARKDOWN',
+                                         reply_markup=ordermarkup)
                     elif text == 'Календарь':
                         now = datetime.now()  # Current date
                         chat_id = message.chat.id
