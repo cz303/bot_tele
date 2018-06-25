@@ -11,16 +11,18 @@ cursor = conn.cursor()
 
 # Создание таблицы "Статистики"
 #cursor.execute("DROP TABLE stats;")
-cursor.execute("CREATE TABLE stats(stat text, number INTEGER DEFAULT 0, name text,  UNIQUE(stat) );")
-cursor.execute("INSERT INTO stats(stat,name) VALUES ('likes','Лайков');")
-cursor.execute("INSERT INTO stats(stat,name) VALUES ('dislikes','Дизлайков');")
-cursor.execute("INSERT INTO stats(stat,name) VALUES ('messages','Всего получено сообщений');")
-cursor.execute("INSERT INTO stats(stat,name) VALUES ('mass_messages','Всего отправлено сообщений в рассылках');")
+#cursor.execute("CREATE TABLE stats(stat text, number INTEGER DEFAULT 0, name text,  UNIQUE(stat) );")
+#cursor.execute("INSERT INTO stats(stat,name) VALUES ('likes','Лайков');")
+#cursor.execute("INSERT INTO stats(stat,name) VALUES ('dislikes','Дизлайков');")
+#cursor.execute("INSERT INTO stats(stat,name) VALUES ('messages','Всего получено сообщений');")
+#cursor.execute("INSERT INTO stats(stat,name) VALUES ('mass_messages','Всего отправлено сообщений в рассылках');")
 
 
 # Создание таблицы "Заказы"
-#cursor.execute("DROP TABLE registed_chats;")
-#cursor.execute("CREATE TABLE registed_chats(chat_id text, status INTEGER DEFAULT 0, name text,  UNIQUE(chat_id) );")
+#cursor.execute("DROP TABLE registed_orders;")
+cursor.execute("CREATE TABLE orders(chat_id real, status INTEGER DEFAULT 0, header text DEFAULT 'None',date text DEFAULT 'None',time text DEFAULT 'None',place text DEFAULT 'None',comment text DEFAULT 'None');")
 
 conn.commit()
 conn.close()
+
+
