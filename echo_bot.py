@@ -44,6 +44,9 @@ row.append(types.InlineKeyboardButton(text="➕ Задать комментар�
 row.append(types.InlineKeyboardButton(text="🔙 Завершить", callback_data="order_back"))
 ordermarkup.row(*row)
 
+ordersendmarkup = ordermarkup
+ordersendmarkup.add(types.InlineKeyboardButton(text="☑ Отправить", callback_data="order_send"))
+
 stopmarkup = types.InlineKeyboardMarkup()
 stopmarkup.add(types.InlineKeyboardButton(text="🔙 Завершить", callback_data="back"))
 
@@ -273,11 +276,22 @@ def echo_message(message):
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
-                        cursor.execute("INSERT INTO orders(chat_id, header) VALUES (" + str(chat_id)
+                        if len(cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
+                                  + str(chat_id) + " order by rowid desc limit 1;")) == 0:
+                            cursor.execute("INSERT INTO orders(chat_id, header) VALUES (" + str(chat_id)
                                        + ", '_Укажите шоу_');")
-                        conn.commit()
-                        bot.send_message(message.chat.id, order(header="_Укажите шоу_"), parse_mode='MARKDOWN',
-                                         reply_markup=ordermarkup)
+                            conn.commit()
+                            bot.send_message(message.chat.id, order(header="_Укажите шоу_"), parse_mode='MARKDOWN',
+                                             reply_markup=ordermarkup)
+                        else:
+                            for row in cursor.execute(
+                                    "select header, date, time, place, comment, rowid from orders where chat_id = "
+                                    + str(chat_id) + " order by rowid desc limit 1;"):
+                                text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
+                            bot.send_message(chat_id, text,
+                                                  parse_mode='MARKDOWN',
+                                                  reply_markup=ordermarkup)
+
                 else:
                     if text == "Про нас":
                         bot.send_message(chat_id,
@@ -371,11 +385,12 @@ def get_day(call):
         cursor.execute("update orders set date = '" + str(date.strftime("%d.%m.%Y")) + "' where chat_id = "
                        + str(call.message.chat.id) + " and status = 0;")
         conn.commit()
-        for row in cursor.execute("select header, date, time, place, comment from orders where chat_id = "
-                                  + str(call.message.chat.id) + " limit 1;"):
+        for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
+                                  + str(call.message.chat.id) + " order by rowid desc limit 1;"):
             text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
         conn.close()
-        bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN', reply_markup=ordermarkup)
+        bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
+                              reply_markup=ordersendmarkup)
         bot.answer_callback_query(call.id, text="Дата выбрана")
     else:
         pass
@@ -471,11 +486,6 @@ def less_day(call):
 def less_day(call):
     try:
         bot.answer_callback_query(call.id, text="Предварительный заказ отменен")
-        conn = sqlite3.connect("mydatabase.db")
-        cursor = conn.cursor()
-        cursor.execute("update orders set status = 1 where chat_id = " + str(call.message.chat.id) + ";")
-        conn.commit()
-        conn.close()
         bot.edit_message_text("*Предварительный заказ отменен*", call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
     except:
@@ -516,12 +526,37 @@ def less_day(call):
         markup = create_calendar(now.year, now.month)
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
-        for row in cursor.execute("select header, date, time, place, comment from orders where chat_id = "
-                                  + str(call.message.chat.id) + " limit 1;"):
+        for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
+                                  + str(call.message.chat.id) + " order by rowid desc limit 1;"):
             text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
         conn.close()
         bot.edit_message_text(text, call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', reply_markup=markup)
+    except:
+        pass
+
+@bot.callback_query_handler(func=lambda call: call.data == 'order_send')
+def less_day(call):
+    try:
+        bot.answer_callback_query(call.id, text="Заказ отправлен")
+        if call.from_user.username:
+            customer = "[" + call.from_user.first_name \
+                   + "](https://t.me/" + call.from_user.username + ")"
+        else:
+            customer = call.from_user.first_name
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
+                                  + str(call.message.chat.id) + " order by rowid desc limit 1;"):
+            text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]),
+                         comment=str(row[4]), customer=customer)
+        cursor.execute("update orders set status = 1 and customer = '" + customer + "' where chat_id = "
+                       + str(call.message.chat.id) + " and status = 0;")
+        conn.commit()
+        conn.close()
+        bot.edit_message_text(text + "\n\n **Заказ отправлен", call.message.chat.id,
+                              call.message.message_id, parse_mode='MARKDOWN')
+
     except:
         pass
 
