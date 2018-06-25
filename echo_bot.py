@@ -120,21 +120,19 @@ def which_step(s):
     else:
         return 1
 
-def order(step = 1,
-          header = None,
+def order(header = None,
           date = None,
           time = None,
           place = None,
           comment = None,
           customer = None):
-    order_step = "Шаг " + xstr(step) + "\n"
     order_header = "*Шоу:* " + xstr(header) + "\n"
     order_date = "*Дата:* " + xstr(date) + "\n"
     order_time = "*Время:* " + xstr(time) + "\n"
     order_place = "*Место:* " + xstr(place) + "\n"
     order_comment = "*Ваш комментарий:* " + xstr(comment) + "\n"
     order_customer = "*Заказчик:* " + xstr(customer) + "\n"
-    order = order_step + order_header + order_date + order_time + order_place + order_comment + order_customer
+    order = order_header + order_date + order_time + order_place + order_comment + order_customer
     return order
 
 def hello(name):
@@ -245,7 +243,7 @@ def echo_message(message):
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
                         inorder.append(chat_id)
-                        bot.send_message(message.chat.id, order(step=1, header=" _Укажите шоу_"), parse_mode='MARKDOWN',
+                        bot.send_message(message.chat.id, order(header=" _Укажите шоу_"), parse_mode='MARKDOWN',
                                          reply_markup=ordermarkup)
                     elif text == 'Календарь':
                         now = datetime.now()  # Current date
@@ -431,6 +429,15 @@ def less_day(call):
         bot.edit_message_text(text, call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
         setmessage.remove(call.message.chat.id)
+    except:
+        pass
+
+@bot.callback_query_handler(func=lambda call: call.data == 'order_back')
+def less_day(call):
+    try:
+        bot.answer_callback_query(call.id, text="Предварительный заказ отменен")
+        bot.edit_message_text("*Предварительный заказ отменен*", call.message.chat.id,
+                          call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
     except:
         pass
 
