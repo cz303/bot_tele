@@ -606,7 +606,6 @@ def less_day(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_send')
 def less_day(call):
-    try:
         bot.answer_callback_query(call.id, text="Заказ отправлен")
         if call.from_user.username:
             customer = "[" + call.from_user.first_name \
@@ -630,8 +629,6 @@ def less_day(call):
         for admin_chat_id in adminchatid:
             bot.send_message(admin_chat_id, "Клиент сделал предзаказ")
             bot.forward_message(admin_chat_id, call.message.chat.id, call.message.message_id)
-    except:
-        pass
 
 try:
     for admin_chat_id in adminchatid:
