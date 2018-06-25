@@ -12,6 +12,7 @@ from telebot import types
 from telegramcalendar import create_calendar
 import psutil
 import time
+import re
 
 logging.basicConfig(filename="logs/tele_bot.log", level=logging.INFO)
 
@@ -139,6 +140,13 @@ def is_str(s):
     else:
         return True
 
+def is_time(s):
+    result = re.findall(r'[0,1,2]\d{1}[:][0,1,2,3,4,5]\d{1}', '18:00')
+    if result:
+        return True
+    else:
+        return False
+
 def order(header = None,
           date = None,
           time = None,
@@ -248,7 +256,7 @@ def echo_message(message):
                         + str(chat_id) + " and status = 0;")
                     conn.commit()
                     inorderheader.remove(chat_id)
-                    bot.send_message(chat_id, "Шоу задано упешно", parse_mode='MARKDOWN',
+                    bot.send_message(chat_id, "Шоу задано успешно", parse_mode='MARKDOWN',
                                           reply_markup=orderupdatemarkup)
 
                 elif chat_id in inorderplace:
@@ -257,7 +265,7 @@ def echo_message(message):
                         + str(chat_id) + " and status = 0;")
                     conn.commit()
                     inorderplace.remove(chat_id)
-                    bot.send_message(chat_id, "Место проведения шоу задано упешно", parse_mode='MARKDOWN',
+                    bot.send_message(chat_id, "Место проведения шоу задано успешно", parse_mode='MARKDOWN',
                                           reply_markup=orderupdatemarkup)
                 elif chat_id in inordercomment:
                     cursor.execute(
@@ -265,22 +273,23 @@ def echo_message(message):
                         + str(chat_id) + " and status = 0;")
                     conn.commit()
                     inordercomment.remove(chat_id)
-                    bot.send_message(chat_id, "Комментарий к заказу упешно задан", parse_mode='MARKDOWN',
+                    bot.send_message(chat_id, "Комментарий к заказу успешно задан", parse_mode='MARKDOWN',
                                           reply_markup=orderupdatemarkup)
                 elif chat_id in inordertime:
-                    if text == "Завершить":
+                    if is_time(text):
                         inordertime.remove(chat_id)
-                        bot.send_message(chat_id,
-                                         "Завершение редактирования времени заказа",
-                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
-                    else:
                         cursor.execute(
                             "update orders set time = '" + text + "' where chat_id = "
                             + str(chat_id) + " and status = 0;")
                         conn.commit()
                         inordertime.remove(chat_id)
-                        bot.send_message(chat_id, "Время заказа упешно задано", parse_mode='MARKDOWN',
-                                              reply_markup=orderupdatemarkup)
+                        bot.send_message(chat_id, "Время заказа успешно задано", parse_mode='MARKDOWN',
+                                         reply_markup=orderupdatemarkup)
+
+                    else:
+                        inordertime.remove(chat_id)
+                        bot.send_message(chat_id,
+                                         "Время необходимо задать в формате ЧЧ:ММ")
                 elif chat_id in inlk:
                     if text == "Заказать прайслист":
                         try:
@@ -555,7 +564,7 @@ def less_day(call):
 def less_day(call):
     try:
         inordertime.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Укажите время", parse_mode='MARKDOWN',
+        bot.send_message(call.message.chat.id, "Укажите время\nВ формате ЧЧ:ММ", parse_mode='MARKDOWN',
                          disable_web_page_preview=True)
     except:
         pass
