@@ -485,7 +485,13 @@ def less_day(call):
         date = (now.year, now.month)
         current_shown_dates[chat_id] = date  # Saving the current date in a dict
         markup = create_calendar(now.year, now.month)
-        bot.edit_message_text(call.message.text, call.message.chat.id,
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        for row in cursor.execute("select header, date, time, place, comment from orders chat_id = "
+                                  + str(call.message.chat.id) + " and status = 0 limit 1;"):
+            text = order(header=row[0], date=row[1], time=row[2], place=[3], comment=row[4])
+        conn.close()
+        bot.edit_message_text(text, call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', reply_markup=markup)
     except:
         pass
