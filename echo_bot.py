@@ -632,12 +632,12 @@ def less_day(call):
                              disable_web_page_preview=True)
             bot.forward_message(admin_chat_id, call.message.chat.id, call.message.message_id)
 
-try:
-    for admin_chat_id in adminchatid:
-        bot.send_chat_action(admin_chat_id, 'typing')
-        bot.send_message(admin_chat_id, "Я запущен!", reply_markup=contactkeyboardmarkup)
-except:
-    pass
+
+for admin_chat_id in adminchatid:
+    bot.send_chat_action(admin_chat_id, 'typing')
+    bot.send_message(admin_chat_id, "Я запущен!", reply_markup=contactkeyboardmarkup)
+
+
 
 while True:
     try:
