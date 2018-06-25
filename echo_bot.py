@@ -288,7 +288,7 @@ def echo_message(message):
                                          parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
                     else:
                         cursor.execute(
-                            "update orders set comment = '" + text + "' where chat_id = "
+                            "update orders set time = '" + text + "' where chat_id = "
                             + str(chat_id) + " and status = 0;")
                         conn.commit()
                         inordertime.remove(chat_id)
