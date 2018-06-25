@@ -338,9 +338,10 @@ def get_day(call):
         date = datetime(int(saved_date[0]), int(saved_date[1]), int(day))
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
-        cursor.execute("update orders set date = '" + str(date.strftime("%d.%m.%Y")) + "' where chat_id = " + str(call.message.chat.id) + " and status = 0;")
+        cursor.execute("update orders set date = '" + str(date.strftime("%d.%m.%Y")) + "' where chat_id = "
+                       + str(call.message.chat.id) + " and status = 0;")
         conn.commit()
-        for row in cursor.execute("select header, date, time, place, comment from orders chat_id = "
+        for row in cursor.execute("select header, date, time, place, comment from orders where chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 limit 1;"):
             text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
         conn.close()
@@ -487,7 +488,7 @@ def less_day(call):
         markup = create_calendar(now.year, now.month)
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
-        for row in cursor.execute("select header, date, time, place, comment from orders chat_id = "
+        for row in cursor.execute("select header, date, time, place, comment from orders where chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 limit 1;"):
             text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
         conn.close()
