@@ -19,7 +19,7 @@ cursor = conn.cursor()
 
 
 # Создание таблицы "Заказы"
-cursor.execute("DROP TABLE registed_orders;")
+cursor.execute("DROP TABLE orders;")
 cursor.execute("CREATE TABLE orders(chat_id real, status INTEGER DEFAULT 0, header text DEFAULT 'None',date text DEFAULT 'None',time text DEFAULT 'None',place text DEFAULT 'None',comment text DEFAULT 'None',customer text DEFAULT 'None');")
 
 conn.commit()
