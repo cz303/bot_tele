@@ -238,48 +238,30 @@ def echo_message(message):
         else:
             if chat_id in userchatid:
                 if chat_id in inorderheader:
-                    if text == "Завершить":
-                        inorderheader.remove(chat_id)
-                        bot.send_message(chat_id,
-                                         "Завершение редактирования названия шоу",
-                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
-                    else:
-                        cursor.execute(
-                            "update orders set header = '" + text + "' where chat_id = "
-                            + str(chat_id) + " and status = 0;")
-                        conn.commit()
-                        inorderheader.remove(chat_id)
-                        bot.send_message(chat_id, "Шоу задано упешно", parse_mode='MARKDOWN',
-                                              reply_markup=orderupdatemarkup)
+                    cursor.execute(
+                        "update orders set header = '" + text + "' where chat_id = "
+                        + str(chat_id) + " and status = 0;")
+                    conn.commit()
+                    inorderheader.remove(chat_id)
+                    bot.send_message(chat_id, "Шоу задано упешно", parse_mode='MARKDOWN',
+                                          reply_markup=orderupdatemarkup)
 
                 elif chat_id in inorderplace:
-                    if text == "Завершить":
-                        inorderplace.remove(chat_id)
-                        bot.send_message(chat_id,
-                                         "Завершение редактирования места проведения шоу",
-                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
-                    else:
-                        cursor.execute(
-                            "update orders set place = '" + text + "' where chat_id = "
-                            + str(chat_id) + " and status = 0;")
-                        conn.commit()
-                        inorderplace.remove(chat_id)
-                        bot.send_message(chat_id, "Место проведения шоу задано упешно", parse_mode='MARKDOWN',
-                                              reply_markup=orderupdatemarkup)
+                    cursor.execute(
+                        "update orders set place = '" + text + "' where chat_id = "
+                        + str(chat_id) + " and status = 0;")
+                    conn.commit()
+                    inorderplace.remove(chat_id)
+                    bot.send_message(chat_id, "Место проведения шоу задано упешно", parse_mode='MARKDOWN',
+                                          reply_markup=orderupdatemarkup)
                 elif chat_id in inordercomment:
-                    if text == "Завершить":
-                        inordercomment.remove(chat_id)
-                        bot.send_message(chat_id,
-                                         "Завершение редактирования комментария к заказу",
-                                         parse_mode='MARKDOWN', reply_markup=elementmarkup_reg)
-                    else:
-                        cursor.execute(
-                            "update orders set comment = '" + text + "' where chat_id = "
-                            + str(chat_id) + " and status = 0;")
-                        conn.commit()
-                        inordercomment.remove(chat_id)
-                        bot.send_message(chat_id, "Комментарий к заказу упешно задан", parse_mode='MARKDOWN',
-                                              reply_markup=orderupdatemarkup)
+                    cursor.execute(
+                        "update orders set comment = '" + text + "' where chat_id = "
+                        + str(chat_id) + " and status = 0;")
+                    conn.commit()
+                    inordercomment.remove(chat_id)
+                    bot.send_message(chat_id, "Комментарий к заказу упешно задан", parse_mode='MARKDOWN',
+                                          reply_markup=orderupdatemarkup)
                 elif chat_id in inordertime:
                     if text == "Завершить":
                         inordertime.remove(chat_id)
@@ -314,7 +296,8 @@ def echo_message(message):
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
                         cursor = cursor.execute("select header, date, time, place, comment, rowid from orders "
-                                                "where chat_id = " + str(chat_id) + " order by rowid desc limit 1;")
+                                                "where chat_id = " + str(chat_id) + " and status = 0"
+                                                                                    " order by rowid desc limit 1;")
                         if len(cursor.fetchall()) == 0:
                             cursor.execute("INSERT INTO orders(chat_id, header) VALUES (" + str(chat_id)
                                        + ", '_Укажите шоу_');")
@@ -324,7 +307,7 @@ def echo_message(message):
                         else:
                             for row in cursor.execute(
                                     "select header, date, time, place, comment, rowid from orders where chat_id = "
-                                    + str(chat_id) + " order by rowid desc limit 1;"):
+                                    + str(chat_id) + " and status = 0 order by rowid desc limit 1;"):
                                 text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
                             bot.send_message(chat_id, text,
                                                   parse_mode='MARKDOWN',
@@ -424,7 +407,7 @@ def get_day(call):
                        + str(call.message.chat.id) + " and status = 0;")
         conn.commit()
         for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
-                                  + str(call.message.chat.id) + " order by rowid desc limit 1;"):
+                                  + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
             text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
         conn.close()
         bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
@@ -533,14 +516,14 @@ def less_day(call):
 def less_day(call):
     inorderheader.append(call.message.chat.id)
     bot.send_message(call.message.chat.id, "Укажите название шоу из прайса", parse_mode='MARKDOWN',
-                         disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
+                         disable_web_page_preview=True)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_place')
 def less_day(call):
     try:
         inorderplace.append(call.message.chat.id)
         bot.send_message(call.message.chat.id, "Укажите место проведения шоу с указанием адреса", parse_mode='MARKDOWN',
-                         disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
+                         disable_web_page_preview=True)
     except:
         pass
 
@@ -549,7 +532,7 @@ def less_day(call):
     try:
         inordercomment.append(call.message.chat.id)
         bot.send_message(call.message.chat.id, "Укажите комментарий", parse_mode='MARKDOWN',
-                         disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
+                         disable_web_page_preview=True)
     except:
         pass
 
@@ -558,7 +541,7 @@ def less_day(call):
     try:
         inordertime.append(call.message.chat.id)
         bot.send_message(call.message.chat.id, "Укажите время", parse_mode='MARKDOWN',
-                         disable_web_page_preview=True, reply_markup=stopkeyboardmarkup)
+                         disable_web_page_preview=True)
     except:
         pass
 
@@ -574,7 +557,7 @@ def less_day(call):
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
         for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
-                                  + str(call.message.chat.id) + " order by rowid desc limit 1;"):
+                                  + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
             text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
         conn.close()
         bot.edit_message_text(text, call.message.chat.id,
@@ -588,7 +571,7 @@ def less_day(call):
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
         for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
-                                  + str(call.message.chat.id) + " order by rowid desc limit 1;"):
+                                  + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
             text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
         conn.close()
         bot.edit_message_text(text, call.message.chat.id,
@@ -608,7 +591,7 @@ def less_day(call):
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
         for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
-                                  + str(call.message.chat.id) + " order by rowid desc limit 1;"):
+                                  + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
             text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]),
                          comment=str(row[4]), customer=customer)
         cursor.execute("update orders set status = 1, customer = '" + customer + "' where chat_id = "
