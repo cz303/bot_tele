@@ -109,7 +109,7 @@ def RepresentsInt(s):
         return False
 
 def xstr(s):
-    if s is None:
+    if s is None or s == 'None':
         return ''
     else:
         return str(s)
