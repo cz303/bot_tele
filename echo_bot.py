@@ -27,6 +27,10 @@ graphstart = datetime.now()
 
 rules = "*Жирный*\n_Курсив_\n[Отображаемое имя ссылки](Адрес ссылки, пример https://ya.ru)"
 
+ordermarkup = types.InlineKeyboardMarkup()
+ordermarkup.add(types.InlineKeyboardButton(text="Продолжить", callback_data="order_next"))
+ordermarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="order_back"))
+
 stopmarkup = types.InlineKeyboardMarkup()
 stopmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
 
@@ -39,9 +43,9 @@ elementmarkup_unreg.add(types.KeyboardButton('Про нас'))
 elementmarkup_unreg.add(types.KeyboardButton('Подписка на бота'))
 
 elementmarkup_soc = types.InlineKeyboardMarkup()
-elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show/"))
+elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show"))
 elementmarkup_soc.add(types.InlineKeyboardButton(text="ВКонтакте", url="https://vk.com/club92907131"))
-elementmarkup_soc.add(types.InlineKeyboardButton(text="Официальный сайт", url="http://deliriumshow.com/"))
+elementmarkup_soc.add(types.InlineKeyboardButton(text="Официальный сайт", url="http://deliriumshow.com"))
 
 adminmarkup = types.ReplyKeyboardMarkup(row_width=1)
 itembtn1 = types.KeyboardButton('Массовая рассылка')
@@ -61,7 +65,7 @@ elementmarkup_unreg = types.ReplyKeyboardMarkup(row_width=1)
 elementmarkup_unreg.add('Про нас', 'Подписка на бота')
 
 elementmarkup_lk = types.ReplyKeyboardMarkup(row_width=1)
-elementmarkup_lk.add('Заказать прайслист', 'Календарь', 'Назад')
+elementmarkup_lk.add('Заказать прайслист','Предварительный заказ', 'Календарь', 'Назад')
 
 likemarkup = types.InlineKeyboardMarkup()
 row=[]
@@ -93,6 +97,21 @@ def RepresentsInt(s):
         return True
     except ValueError:
         return False
+
+def order(header = None,
+          date = None,
+          time = None,
+          place = None,
+          comment = None,
+          customer = None):
+    order_header = "*Шоу:* " + header + "\n"
+    order_date = "*Дата:* " + date + "\n"
+    order_time = "*Время:* " + time + "\n"
+    order_place = "*Место:* " + place + "\n"
+    order_comment = "*Ваш комментарий:* " + comment + "\n"
+    order_customer = "*Заказчик:* " + customer + "\n"
+    order = order_header + order_date + order_time + order_place + order_comment + order_customer
+    return order
 
 def hello(name):
     phrase = ['Привет, ', 'Добрый день, ', 'Здравствуйте, ', 'Аллоха, ']
@@ -194,6 +213,8 @@ def echo_message(message):
                     elif text == 'Назад':
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
+                    elif text == 'Предварительный заказ':
+                        bot.send_message(message.chat.id, order(), reply_markup=ordermarkup)
                     elif text == 'Календарь':
                         now = datetime.now()  # Current date
                         chat_id = message.chat.id
