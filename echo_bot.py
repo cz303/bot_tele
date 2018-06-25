@@ -276,8 +276,9 @@ def echo_message(message):
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
-                        if len(cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
-                                  + str(chat_id) + " order by rowid desc limit 1;")) == 0:
+                        cursor = cursor.execute("select header, date, time, place, comment, rowid from orders "
+                                                "where chat_id = " + str(chat_id) + " order by rowid desc limit 1;")
+                        if len(cursor.fetchall()) == 0:
                             cursor.execute("INSERT INTO orders(chat_id, header) VALUES (" + str(chat_id)
                                        + ", '_Укажите шоу_');")
                             conn.commit()
