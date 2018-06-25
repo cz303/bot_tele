@@ -285,7 +285,6 @@ def echo_message(message):
                         bot.send_message(chat_id, "Время заказа успешно задано", parse_mode='MARKDOWN',
                                          reply_markup=orderupdatemarkup)
                     else:
-                        inordertime.remove(chat_id)
                         bot.send_message(chat_id,
                                          "Время необходимо задать в формате ЧЧ:ММ")
                 elif chat_id in inlk:
