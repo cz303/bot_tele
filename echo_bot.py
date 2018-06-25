@@ -282,10 +282,8 @@ def echo_message(message):
                             "update orders set time = '" + text + "' where chat_id = "
                             + str(chat_id) + " and status = 0;")
                         conn.commit()
-                        inordertime.remove(chat_id)
                         bot.send_message(chat_id, "Время заказа успешно задано", parse_mode='MARKDOWN',
                                          reply_markup=orderupdatemarkup)
-
                     else:
                         inordertime.remove(chat_id)
                         bot.send_message(chat_id,
