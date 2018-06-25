@@ -372,7 +372,7 @@ def get_day(call):
                        + str(call.message.chat.id) + " and status = 0;")
         conn.commit()
         for row in cursor.execute("select header, date, time, place, comment from orders where chat_id = "
-                                  + str(call.message.chat.id) + " and status = 0 limit 1;"):
+                                  + str(call.message.chat.id) + " limit 1;"):
             text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
         conn.close()
         bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN', reply_markup=ordermarkup)
@@ -473,13 +473,10 @@ def less_day(call):
         bot.answer_callback_query(call.id, text="Предварительный заказ отменен")
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
-        for row in cursor.execute("select header, date, time, place, comment from orders where chat_id = "
-                                  + str(call.message.chat.id) + " and status = 0 limit 1;"):
-            text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
         cursor.execute("update orders set status = 1 where chat_id = " + str(call.message.chat.id) + ";")
         conn.commit()
         conn.close()
-        bot.edit_message_text(text + "\n\n*Предварительный заказ отменен*", call.message.chat.id,
+        bot.edit_message_text("*Предварительный заказ отменен*", call.message.chat.id,
                           call.message.message_id, parse_mode='MARKDOWN', disable_web_page_preview=True)
     except:
         pass
@@ -520,7 +517,7 @@ def less_day(call):
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
         for row in cursor.execute("select header, date, time, place, comment from orders where chat_id = "
-                                  + str(call.message.chat.id) + " and status = 0 limit 1;"):
+                                  + str(call.message.chat.id) + " limit 1;"):
             text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
         conn.close()
         bot.edit_message_text(text, call.message.chat.id,
