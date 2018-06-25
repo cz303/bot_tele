@@ -25,6 +25,7 @@ inorderheader = []
 inorderplace = []
 inordercomment = []
 inordertime = []
+inordernumber = []
 
 userchatid = []
 adminchatid = []
@@ -43,8 +44,9 @@ row.append(types.InlineKeyboardButton(text="➕ Задать место", callba
 ordermarkup.row(*row)
 row=[]
 row.append(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
-row.append(types.InlineKeyboardButton(text="🔙 Отменить", callback_data="order_back"))
+row.append(types.InlineKeyboardButton(text="➕ Задать телефон", callback_data="order_number"))
 ordermarkup.row(*row)
+ordermarkup.add(types.InlineKeyboardButton(text="🔙 Отменить", callback_data="order_back"))
 
 ordersendmarkup = types.InlineKeyboardMarkup()
 row=[]
@@ -57,8 +59,9 @@ row.append(types.InlineKeyboardButton(text="➕ Задать место", callba
 ordersendmarkup.row(*row)
 row=[]
 row.append(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
-row.append(types.InlineKeyboardButton(text="🔙 Отменить", callback_data="order_back"))
+row.append(types.InlineKeyboardButton(text="➕ Задать телефон", callback_data="order_number"))
 ordersendmarkup.row(*row)
+ordersendmarkup.add(types.InlineKeyboardButton(text="🔙 Отменить", callback_data="order_back"))
 ordersendmarkup.add(types.InlineKeyboardButton(text="☑ Отправить", callback_data="order_send"))
 
 orderupdatemarkup = types.InlineKeyboardMarkup()
@@ -155,18 +158,20 @@ def order(header = None,
           time = None,
           place = None,
           comment = None,
-          customer = None):
+          customer = None,
+          number = None):
     order_header = "*Шоу:* " + xstr(header) + "\n"
     order_date = "*Дата:* " + xstr(date) + "\n"
     order_time = "*Время:* " + xstr(time) + "\n"
     order_place = "*Место:* " + xstr(place) + "\n"
     order_comment = "*Ваш комментарий:* " + xstr(comment) + "\n"
     order_customer = "*Заказчик:* " + xstr(customer) + "\n"
-    order = order_header + order_date + order_time + order_place + order_comment + order_customer
+    order_number = "*Контактный номер:* " + xstr(number) + "\n"
+    order = order_header + order_date + order_time + order_place + order_comment + order_customer + order_number
     return order
 
-def check_order(header, date, time, place, comment):
-    if is_str(header) and is_str(date) and is_str(time) and is_str(place) and is_str(comment):
+def check_order(header, date, time, place, number):
+    if is_str(header) and is_str(date) and is_str(time) and is_str(place) and is_str(number):
         return True
     else:
         return False
@@ -278,6 +283,14 @@ def echo_message(message):
                     inordercomment.remove(chat_id)
                     bot.send_message(chat_id, "Комментарий к заказу успешно задан", parse_mode='MARKDOWN',
                                           reply_markup=orderupdatemarkup)
+                elif chat_id in inordernumber:
+                    cursor.execute(
+                        "update orders set phone_number = '" + text + "' where chat_id = "
+                        + str(chat_id) + " and status = 0;")
+                    conn.commit()
+                    inordernumber.remove(chat_id)
+                    bot.send_message(chat_id, "Контактрый номер телефона успешно задан", parse_mode='MARKDOWN',
+                                          reply_markup=orderupdatemarkup)
                 elif chat_id in inordertime:
                     if is_time(text):
                         inordertime.remove(chat_id)
@@ -309,7 +322,8 @@ def echo_message(message):
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
-                        cursor = cursor.execute("select header, date, time, place, comment, rowid from orders "
+                        cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
+                                                " rowid from orders "
                                                 "where chat_id = " + str(chat_id) + " and status = 0"
                                                                                     " order by rowid desc limit 1;")
                         if len(cursor.fetchall()) == 0:
@@ -320,10 +334,12 @@ def echo_message(message):
                                              reply_markup=ordermarkup)
                         else:
                             for row in cursor.execute(
-                                    "select header, date, time, place, comment, rowid from orders where chat_id = "
+                                    "select header, date, time, place, comment, phone_number,"
+                                    " rowid from orders where chat_id = "
                                     + str(chat_id) + " and status = 0 order by rowid desc limit 1;"):
-                                text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
-                                if check_order(row[0], row[1], row[2], row[3], row[4]):
+                                text = order(header=row[0], date=row[1], time=row[2], place=row[3],
+                                             comment=row[4], number=row[5])
+                                if check_order(row[0], row[1], row[2], row[3], row[5]):
                                     bot.send_message(chat_id, text,
                                                   parse_mode='MARKDOWN',
                                                   reply_markup=ordersendmarkup)
@@ -425,10 +441,10 @@ def get_day(call):
         cursor.execute("update orders set date = '" + str(date.strftime("%d.%m.%Y")) + "' where chat_id = "
                        + str(call.message.chat.id) + " and status = 0;")
         conn.commit()
-        for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
+        for row in cursor.execute("select header, date, time, place, comment, phone_number, rowid from orders where chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
-            text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
-            if check_order(row[0], row[1], row[2], row[3], row[4]):
+            text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4], number=row[5])
+            if check_order(row[0], row[1], row[2], row[3], row[5]):
                 bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
                                       reply_markup=ordersendmarkup)
                 bot.answer_callback_query(call.id, text="Дата выбрана")
@@ -569,6 +585,15 @@ def less_day(call):
     except:
         pass
 
+@bot.callback_query_handler(func=lambda call: call.data == 'order_number')
+def less_day(call):
+    try:
+        inordernumber.append(call.message.chat.id)
+        bot.send_message(call.message.chat.id, "Отправьте мне свой телефон", parse_mode='MARKDOWN',
+                         disable_web_page_preview=True)
+    except:
+        pass
+
 @bot.callback_query_handler(func=lambda call: call.data == 'order_date')
 def less_day(call):
     try:
@@ -580,9 +605,11 @@ def less_day(call):
         markup = create_calendar(now.year, now.month)
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
-        for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
+        for row in cursor.execute("select header, date, time, place, comment, phone_number,"
+                                  " rowid from orders where chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
-            text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
+            text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]),
+                         comment=str(row[4]), number=str(row[5]))
         conn.close()
         bot.edit_message_text(text, call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', reply_markup=markup)
@@ -594,10 +621,12 @@ def less_day(call):
     try:
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
-        for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
+        for row in cursor.execute("select header, date, time, place, comment, phone_number,"
+                                  " rowid from orders where chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
-            text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
-        if check_order(row[0], row[1], row[2], row[3], row[4]):
+            text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]),
+                         comment=str(row[4]), number=str(row[5]))
+        if check_order(row[0], row[1], row[2], row[3], row[5]):
             bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
                                   reply_markup=ordersendmarkup)
         else:
@@ -617,10 +646,11 @@ def less_day(call):
             customer = call.from_user.first_name
         conn = sqlite3.connect("mydatabase.db")
         cursor = conn.cursor()
-        for row in cursor.execute("select header, date, time, place, comment, rowid from orders where chat_id = "
+        for row in cursor.execute("select header, date, time, place, comment, phone_number,"
+                                  " rowid from orders where chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 order by rowid desc limit 1;"):
             text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]),
-                         comment=str(row[4]), customer=customer)
+                         comment=str(row[4]), customer=customer, number=row[5])
         cursor.execute("update orders set status = 1, customer = '" + customer + "' where chat_id = "
                        + str(call.message.chat.id) + " and status = 0;")
         conn.commit()
@@ -632,12 +662,12 @@ def less_day(call):
                              disable_web_page_preview=True)
             bot.forward_message(admin_chat_id, call.message.chat.id, call.message.message_id)
 
-
-for admin_chat_id in adminchatid:
-    bot.send_chat_action(admin_chat_id, 'typing')
-    bot.send_message(admin_chat_id, "Я запущен!", reply_markup=contactkeyboardmarkup)
-
-
+try:
+    for admin_chat_id in adminchatid:
+        bot.send_chat_action(admin_chat_id, 'typing')
+        bot.send_message(admin_chat_id, "Я запущен!", reply_markup=adminmarkup)
+except:
+    pass
 
 while True:
     try:
