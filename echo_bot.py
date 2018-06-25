@@ -34,7 +34,6 @@ sendmarkup = types.InlineKeyboardMarkup()
 sendmarkup.add(types.InlineKeyboardButton(text="Отправить", callback_data="send"))
 sendmarkup.add(types.InlineKeyboardButton(text="Завершить", callback_data="back"))
 
-
 elementmarkup_unreg = types.ReplyKeyboardMarkup(row_width=1)
 elementmarkup_unreg.add(types.KeyboardButton('Про нас'))
 elementmarkup_unreg.add(types.KeyboardButton('Подписка на бота'))
@@ -43,7 +42,6 @@ elementmarkup_soc = types.InlineKeyboardMarkup()
 elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show/"))
 elementmarkup_soc.add(types.InlineKeyboardButton(text="ВКонтакте", url="https://vk.com/club92907131"))
 elementmarkup_soc.add(types.InlineKeyboardButton(text="Официальный сайт", url="http://deliriumshow.com/"))
-
 
 adminmarkup = types.ReplyKeyboardMarkup(row_width=1)
 itembtn1 = types.KeyboardButton('Массовая рассылка')
@@ -83,13 +81,11 @@ for row in cursor.execute("select chat_id from chats where status = 1;"):
     userchatid.append(float(row[0]))
 conn.close()
 
-
 def clearall(chat_id):
     if chat_id in setmessage:
         setmessage.remove(chat_id)
     if chat_id in viewstatic:
         viewstatic.remove(chat_id)
-
 
 def RepresentsInt(s):
     try:
@@ -98,13 +94,11 @@ def RepresentsInt(s):
     except ValueError:
         return False
 
-
 def hello(name):
     phrase = ['Привет, ', 'Добрый день, ', 'Здравствуйте, ', 'Аллоха, ']
     i = random.randint(0, 3)
     result = phrase[i] + name + "!"
     return result
-
 
 bot = telebot.TeleBot(telegrambot)
 
@@ -171,7 +165,7 @@ def echo_message(message):
                             memavail + "\n" + \
                             memuseperc + "\n" + \
                             diskused + "\n\n" + \
-                            label_follow + "\n\n" + \
+                            label_follow + "\n" + \
                             label_stats
 
                     bot.send_message(chat_id, reply, parse_mode='MARKDOWN', disable_web_page_preview=True)
@@ -185,7 +179,7 @@ def echo_message(message):
                 if chat_id in inlk:
                     if text == "Заказать прайслист":
                         try:
-                            f = open('/root/bot_tele/etc/list.xml', 'rb', )
+                            f = open('/root/bot_tele/etc/element_show_prices.pdf', 'rb', )
                             bot.send_document(chat_id, f)
                         except:
                             bot.send_message(chat_id, 'Приношу свои изминения, у меня нет актуального прайса! \n'
@@ -297,9 +291,7 @@ def get_day(call):
         date = datetime(int(saved_date[0]),int(saved_date[1]),int(day))
         bot.edit_message_text("Вы выбрали: *" + str(date.strftime("%d.%m.%Y")) + "*", call.from_user.id, call.message.message_id, parse_mode='MARKDOWN')
         bot.answer_callback_query(call.id, text="Дата выбрана")
-
     else:
-        #Do something to inform of the error
         pass
 
 @bot.callback_query_handler(func=lambda call: call.data == 'next-month')
@@ -318,7 +310,6 @@ def next_month(call):
         bot.edit_message_text("Пожалуйста, выберете дату", call.from_user.id, call.message.message_id, reply_markup=markup)
         bot.answer_callback_query(call.id, text="")
     else:
-        #Do something to inform of the error
         pass
 
 @bot.callback_query_handler(func=lambda call: call.data == 'previous-month')
@@ -337,7 +328,6 @@ def previous_month(call):
         bot.edit_message_text("Пожалуйста, выберете дату", call.from_user.id, call.message.message_id, reply_markup=markup)
         bot.answer_callback_query(call.id, text="")
     else:
-        #Do something to inform of the error
         pass
 
 @bot.callback_query_handler(func=lambda call: call.data == 'ignore')
@@ -398,16 +388,7 @@ except:
     pass
 
 while True:
-
     try:
-
         bot.polling(none_stop=True)
-
-    # ConnectionError and ReadTimeout because of possible timout of the requests library
-
-    # TypeError for moviepy errors
-
-    # maybe there are others, therefore Exception
-
     except:
         time.sleep(15)
