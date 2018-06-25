@@ -627,8 +627,7 @@ def less_day(call):
         bot.edit_message_reply_markup(call.from_user.id,
                                       call.message.message_id)
         for admin_chat_id in adminchatid:
-            bot.send_message(admin_chat_id, "Клиент сделал предзаказ")
-            bot.forward_message(admin_chat_id, call.message.chat.id, call.message.message_id)
+            bot.send_message(admin_chat_id, "Клиент сделал предзаказ\n\n" + text)
 
 try:
     for admin_chat_id in adminchatid:
