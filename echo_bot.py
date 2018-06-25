@@ -315,7 +315,7 @@ def echo_message(message):
                                     "select header, date, time, place, comment, rowid from orders where chat_id = "
                                     + str(chat_id) + " and status = 0 order by rowid desc limit 1;"):
                                 text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
-                                if check_order(row[0],row[1],row[2],row[4]):
+                                if check_order(row[0], row[1], row[2], row[3], row[4]):
                                     bot.send_message(chat_id, text,
                                                   parse_mode='MARKDOWN',
                                                   reply_markup=ordersendmarkup)
