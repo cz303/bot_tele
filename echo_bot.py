@@ -611,7 +611,7 @@ def less_day(call):
                                   + str(call.message.chat.id) + " order by rowid desc limit 1;"):
             text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]),
                          comment=str(row[4]), customer=customer)
-        cursor.execute("update orders set status = 1 and customer = '" + customer + "' where chat_id = "
+        cursor.execute("update orders set status = 1, customer = '" + customer + "' where chat_id = "
                        + str(call.message.chat.id) + " and status = 0;")
         conn.commit()
         conn.close()
