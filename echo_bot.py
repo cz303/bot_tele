@@ -32,7 +32,7 @@ rules = "*Жирный*\n_Курсив_\n[Отображаемое имя ссы
 
 ordermarkup = types.InlineKeyboardMarkup()
 row=[]
-row.append(types.InlineKeyboardButton(text="➕ Задать шоу", callback_data="order_show"))
+row.append(types.InlineKeyboardButton(text="➕ Задать шоу", callback_data="order_header"))
 row.append(types.InlineKeyboardButton(text="➕ Задать дату", callback_data="order_date"))
 ordermarkup.row(*row)
 row=[]
@@ -46,7 +46,7 @@ ordermarkup.row(*row)
 
 ordersendmarkup = types.InlineKeyboardMarkup()
 row=[]
-row.append(types.InlineKeyboardButton(text="➕ Задать шоу", callback_data="order_show"))
+row.append(types.InlineKeyboardButton(text="➕ Задать шоу", callback_data="order_header"))
 row.append(types.InlineKeyboardButton(text="➕ Задать дату", callback_data="order_date"))
 ordersendmarkup.row(*row)
 row=[]
