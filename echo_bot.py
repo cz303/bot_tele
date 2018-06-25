@@ -44,7 +44,19 @@ row.append(types.InlineKeyboardButton(text="➕ Задать комментар�
 row.append(types.InlineKeyboardButton(text="🔙 Завершить", callback_data="order_back"))
 ordermarkup.row(*row)
 
-ordersendmarkup = ordermarkup
+ordersendmarkup = types.InlineKeyboardMarkup()
+row=[]
+row.append(types.InlineKeyboardButton(text="➕ Задать шоу", callback_data="order_show"))
+row.append(types.InlineKeyboardButton(text="➕ Задать дату", callback_data="order_date"))
+ordersendmarkup.row(*row)
+row=[]
+row.append(types.InlineKeyboardButton(text="➕ Задать время", callback_data="order_time"))
+row.append(types.InlineKeyboardButton(text="➕ Задать место", callback_data="order_place"))
+ordersendmarkup.row(*row)
+row=[]
+row.append(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
+row.append(types.InlineKeyboardButton(text="🔙 Завершить", callback_data="order_back"))
+ordersendmarkup.row(*row)
 ordersendmarkup.add(types.InlineKeyboardButton(text="☑ Отправить", callback_data="order_send"))
 
 stopmarkup = types.InlineKeyboardMarkup()
