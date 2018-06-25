@@ -342,7 +342,7 @@ def get_day(call):
         conn.commit()
         for row in cursor.execute("select header, date, time, place, comment from orders chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 limit 1;"):
-            text = order(header=row[0], date=row[1], time=row[2], place=[3], comment=row[4])
+            text = order(header=row[0], date=row[1], time=row[2], place=row[3], comment=row[4])
         conn.close()
         bot.edit_message_text(text, call.from_user.id, call.message.message_id, parse_mode='MARKDOWN', reply_markup=ordermarkup)
         bot.answer_callback_query(call.id, text="Дата выбрана")
@@ -489,7 +489,7 @@ def less_day(call):
         cursor = conn.cursor()
         for row in cursor.execute("select header, date, time, place, comment from orders chat_id = "
                                   + str(call.message.chat.id) + " and status = 0 limit 1;"):
-            text = order(header=row[0], date=row[1], time=row[2], place=[3], comment=row[4])
+            text = order(header=str(row[0]), date=str(row[1]), time=str(row[2]), place=str(row[3]), comment=str(row[4]))
         conn.close()
         bot.edit_message_text(text, call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', reply_markup=markup)
