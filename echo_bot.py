@@ -237,9 +237,10 @@ def echo_message(message):
                         inlk.remove(chat_id)
                         bot.send_message(chat_id, "Вернулись", reply_markup=elementmarkup_reg)
                     elif text == 'Предварительный заказ':
-                        cursor.execute("INSERT INTO orders(chat_id) VALUES (" + str(chat_id) + ");")
+                        cursor.execute("INSERT INTO orders(chat_id, header) VALUES (" + str(chat_id)
+                                       + ", '_Укажите шоу_');")
                         conn.commit()
-                        bot.send_message(message.chat.id, order(header=" _Укажите шоу_"), parse_mode='MARKDOWN',
+                        bot.send_message(message.chat.id, order(header="_Укажите шоу_"), parse_mode='MARKDOWN',
                                          reply_markup=ordermarkup)
                     elif text == 'Календарь':
                         now = datetime.now()  # Current date
