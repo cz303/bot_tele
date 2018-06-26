@@ -191,7 +191,7 @@ def hello(name):
     result = phrase[i] + name + "!"
     return result
 
-bot = telebot.TeleBot(telegrambot)
+bot = telebot.TeleBot(telegrambot_test)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
