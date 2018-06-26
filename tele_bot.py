@@ -33,6 +33,8 @@ graphstart = datetime.now()
 
 rules = "*Жирный*\n_Курсив_\n[Отображаемое имя ссылки](Адрес ссылки, пример https://ya.ru)"
 
+dbname="elemdatabase.db"
+
 ordermarkup = types.InlineKeyboardMarkup()
 row=[]
 row.append(types.InlineKeyboardButton(text="➕ Задать шоу", callback_data="order_header"))
@@ -115,13 +117,13 @@ row.append(types.InlineKeyboardButton("👍",callback_data="like"))
 row.append(types.InlineKeyboardButton("👎",callback_data="dislike"))
 likemarkup.row(*row)
 
-conn = sqlite3.connect("mydatabase.db")
+conn = sqlite3.connect(dbname)
 cursor = conn.cursor()
 for row in cursor.execute("select chat_id from chats where status = 2;"):
     adminchatid.append(float(row[0]))
 conn.close()
 
-conn = sqlite3.connect("mydatabase.db")
+conn = sqlite3.connect(dbname)
 cursor = conn.cursor()
 for row in cursor.execute("select chat_id from chats where status = 1;"):
     userchatid.append(float(row[0]))
@@ -195,7 +197,7 @@ bot = telebot.TeleBot(telegrambot_elem)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
-    conn = sqlite3.connect("mydatabase.db")
+    conn = sqlite3.connect(dbname)
     cursor = conn.cursor()
     cursor.execute("INSERT INTO chats(chat_id) VALUES (" + str(message.chat.id) + ");")
     conn.commit()
@@ -209,7 +211,7 @@ def echo_message(message):
     chat_type = str(message.chat.type)
     chat_id = message.chat.id
 
-    conn = sqlite3.connect("mydatabase.db")
+    conn = sqlite3.connect(dbname)
     cursor = conn.cursor()
     cursor.execute("update stats set number = number+1 where stat = 'messages';")
     conn.commit()
@@ -422,7 +424,7 @@ def echo_message(message):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'like')
 def like(call):
-    conn = sqlite3.connect("mydatabase.db")
+    conn = sqlite3.connect(dbname)
     cursor = conn.cursor()
     cursor.execute("update stats set number = number+1 where stat = 'likes';")
     conn.commit()
@@ -433,7 +435,7 @@ def like(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'dislike')
 def dislike(call):
-    conn = sqlite3.connect("mydatabase.db")
+    conn = sqlite3.connect(dbname)
     cursor = conn.cursor()
     cursor.execute("update stats set number = number+1 where stat = 'dislikes';")
     conn.commit()
@@ -449,7 +451,7 @@ def get_day(call):
     if(saved_date is not None):
         day=call.data[13:]
         date = datetime(int(saved_date[0]), int(saved_date[1]), int(day))
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         cursor.execute("update orders set date = '" + str(date.strftime("%d.%m.%Y")) + "' where chat_id = "
                        + str(call.message.chat.id) + " and status = 0;")
@@ -534,7 +536,7 @@ def less_day(call):
     try:
         k = 0
         text = call.message.text.lstrip('Собщение для отправки:\n\n')
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         for row in cursor.execute("select chat_id, name from chats where status = 1"):
             bot.send_message(row[0], hello(row[1]) + "\n\n" + text,
@@ -567,7 +569,7 @@ def less_day(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_header')
 def less_day(call):
-    conn = sqlite3.connect("mydatabase.db")
+    conn = sqlite3.connect(dbname)
     cursor = conn.cursor()
     cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
                             " rowid from orders "
@@ -585,7 +587,7 @@ def less_day(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'order_place')
 def less_day(call):
     try:
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
                                 " rowid from orders "
@@ -605,7 +607,7 @@ def less_day(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'order_comment')
 def less_day(call):
     try:
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
                                 " rowid from orders "
@@ -625,7 +627,7 @@ def less_day(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'order_time')
 def less_day(call):
     try:
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
                                 " rowid from orders "
@@ -645,7 +647,7 @@ def less_day(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'order_number')
 def less_day(call):
     try:
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
                                 " rowid from orders "
@@ -671,7 +673,7 @@ def less_day(call):
         date = (now.year, now.month)
         current_shown_dates[chat_id] = date  # Saving the current date in a dict
         markup = create_calendar(now.year, now.month)
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         for row in cursor.execute("select header, date, time, place, comment, phone_number,"
                                   " rowid from orders where chat_id = "
@@ -688,7 +690,7 @@ def less_day(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'order_refresh')
 def less_day(call):
     try:
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         for row in cursor.execute("select header, date, time, place, comment, phone_number,"
                                   " rowid from orders where chat_id = "
@@ -715,7 +717,7 @@ def less_day(call):
                    + "](https://t.me/" + call.from_user.username + ")"
         else:
             customer = call.from_user.first_name
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         for row in cursor.execute("select header, date, time, place, comment, phone_number,"
                                   " rowid from orders where chat_id = "
@@ -732,7 +734,7 @@ def less_day(call):
             bot.send_message(admin_chat_id, "Клиент сделал предзаказ", parse_mode='MARKDOWN',
                              disable_web_page_preview=True)
             bot.forward_message(admin_chat_id, call.message.chat.id, call.message.message_id)
-        conn = sqlite3.connect("mydatabase.db")
+        conn = sqlite3.connect(dbname)
         cursor = conn.cursor()
         cursor.execute("update stats set number = number+1 where stat = 'orders_send';")
         conn.commit()
