@@ -556,9 +556,21 @@ def less_day(call):
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_header')
 def less_day(call):
-    inorderheader.append(call.message.chat.id)
-    bot.send_message(call.message.chat.id, "Отправьте мне название шоу из прайса", parse_mode='MARKDOWN',
+    conn = sqlite3.connect("mydatabase.db")
+    cursor = conn.cursor()
+    cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
+                            " rowid from orders "
+                            "where chat_id = " + str(call.message.chat.id) + " and status = 0"
+                                                                " order by rowid desc limit 1;")
+    if len(cursor.fetchall()) == 0:
+        bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
+                              parse_mode='MARKDOWN',
+                              reply_markup=ordermarkup)
+    else:
+        inorderheader.append(call.message.chat.id)
+        bot.send_message(call.message.chat.id, "Отправьте мне название шоу из прайса", parse_mode='MARKDOWN',
                          disable_web_page_preview=True)
+    conn.close()
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_place')
 def less_day(call):
@@ -616,7 +628,9 @@ def less_day(call):
         bot.edit_message_text(text, call.message.chat.id,
                               call.message.message_id, parse_mode='MARKDOWN', reply_markup=markup)
     except:
-        pass
+        bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
+                              parse_mode='MARKDOWN',
+                              reply_markup=ordermarkup)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_refresh')
 def less_day(call):
@@ -636,10 +650,12 @@ def less_day(call):
                                   reply_markup=ordermarkup)
         conn.close()
     except:
-        pass
+        bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id, parse_mode='MARKDOWN',
+                              reply_markup=ordermarkup)
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_send')
 def less_day(call):
+    try:
         bot.answer_callback_query(call.id, text="Заказ отправлен")
         if call.from_user.username:
             customer = "[" + call.from_user.first_name \
@@ -663,6 +679,10 @@ def less_day(call):
             bot.send_message(admin_chat_id, "Клиент сделал предзаказ", parse_mode='MARKDOWN',
                              disable_web_page_preview=True)
             bot.forward_message(admin_chat_id, call.message.chat.id, call.message.message_id)
+    except:
+        bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
+                              parse_mode='MARKDOWN',
+                              reply_markup=ordermarkup)
 
 try:
     for admin_chat_id in adminchatid:
