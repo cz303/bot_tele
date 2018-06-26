@@ -8,7 +8,7 @@ cursor = conn.cursor()
 #cursor.execute("CREATE TABLE chats(chat_id real, name text DEFAULT 'Your name', status INTEGER DEFAULT 0, UNIQUE(chat_id) );")
 #моя личка chat_id = '109099327'
 #cursor.execute("UPDATE chats SET status = 2 where chat_id = -241874218;")
-cursor.execute("INSERT INTO chats(chat_id, status) VALUES (-311521038, 2);")
+#cursor.execute("INSERT INTO chats(chat_id, status) VALUES (-311521038, 2);")
 
 # Создание таблицы "Статистики"
 #cursor.execute("DROP TABLE stats;")
