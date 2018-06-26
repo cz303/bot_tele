@@ -564,8 +564,7 @@ def less_day(call):
                                                                 " order by rowid desc limit 1;")
     if len(cursor.fetchall()) == 0:
         bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
-                              parse_mode='MARKDOWN',
-                              reply_markup=ordermarkup)
+                              parse_mode='MARKDOWN')
     else:
         inorderheader.append(call.message.chat.id)
         bot.send_message(call.message.chat.id, "Отправьте мне название шоу из прайса", parse_mode='MARKDOWN',
