@@ -681,8 +681,7 @@ def less_day(call):
             bot.forward_message(admin_chat_id, call.message.chat.id, call.message.message_id)
     except:
         bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
-                              parse_mode='MARKDOWN',
-                              reply_markup=ordermarkup)
+                              parse_mode='MARKDOWN')
 
 try:
     for admin_chat_id in adminchatid:
