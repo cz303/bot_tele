@@ -10,13 +10,13 @@ cursor = conn.cursor()
 #cursor.execute("UPDATE chats SET status = 2 where chat_id = -241874218;")
 
 # Создание таблицы "Статистики"
-cursor.execute("DROP TABLE stats;")
-cursor.execute("CREATE TABLE stats(stat text, number INTEGER DEFAULT 0, name text,  UNIQUE(stat) );")
-cursor.execute("INSERT INTO stats(stat,name) VALUES ('likes','Лайков');")
-cursor.execute("INSERT INTO stats(stat,name) VALUES ('dislikes','Дизлайков');")
-cursor.execute("INSERT INTO stats(stat,name) VALUES ('messages','Всего получено сообщений');")
-cursor.execute("INSERT INTO stats(stat,name) VALUES ('mass_messages','Всего отправлено сообщений в рассылках');")
-cursor.execute("INSERT INTO stats(stat,name) VALUES ('orders_send','Всего отправлено предзаказов');")
+#cursor.execute("DROP TABLE stats;")
+#cursor.execute("CREATE TABLE stats(stat text, number INTEGER DEFAULT 0, name text,  UNIQUE(stat) );")
+#cursor.execute("INSERT INTO stats(stat,name) VALUES ('likes','Лайков');")
+#cursor.execute("INSERT INTO stats(stat,name) VALUES ('dislikes','Дизлайков');")
+#cursor.execute("INSERT INTO stats(stat,name) VALUES ('messages','Всего получено сообщений');")
+#cursor.execute("INSERT INTO stats(stat,name) VALUES ('mass_messages','Всего отправлено сообщений в рассылках');")
+#cursor.execute("INSERT INTO stats(stat,name) VALUES ('orders_send','Всего отправлено предзаказов');")
 
 
 # Создание таблицы "Заказы"
