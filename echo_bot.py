@@ -713,6 +713,7 @@ def less_day(call):
                          comment=str(row[4]), customer=customer, number=row[5])
         cursor.execute("update orders set status = 1, customer = '" + customer + "' where chat_id = "
                        + str(call.message.chat.id) + " and status = 0;")
+        cursor.execute("update stats set number = number+1 where stat = 'orders_send';")
         conn.commit()
         conn.close()
         bot.edit_message_text(text + "\n*Предзаказ отправлен*", call.message.chat.id,
