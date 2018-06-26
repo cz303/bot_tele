@@ -713,7 +713,6 @@ def less_day(call):
                          comment=str(row[4]), customer=customer, number=row[5])
         cursor.execute("update orders set status = 1, customer = '" + customer + "' where chat_id = "
                        + str(call.message.chat.id) + " and status = 0;")
-        cursor.execute("update stats set number = number+1 where stat = 'orders_send';")
         conn.commit()
         conn.close()
         bot.edit_message_text(text + "\n*Предзаказ отправлен*", call.message.chat.id,
@@ -722,6 +721,11 @@ def less_day(call):
             bot.send_message(admin_chat_id, "Клиент сделал предзаказ", parse_mode='MARKDOWN',
                              disable_web_page_preview=True)
             bot.forward_message(admin_chat_id, call.message.chat.id, call.message.message_id)
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        cursor.execute("update stats set number = number+1 where stat = 'orders_send';")
+        conn.commit()
+        conn.close()
     except:
         bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
                               parse_mode='MARKDOWN')
