@@ -36,30 +36,30 @@ rules = "*Жирный*\n_Курсив_\n[Отображаемое имя ссы
 ordermarkup = types.InlineKeyboardMarkup()
 row=[]
 row.append(types.InlineKeyboardButton(text="➕ Задать шоу", callback_data="order_header"))
-row.append(types.InlineKeyboardButton(text="➕ Задать дату", callback_data="order_date"))
-ordermarkup.row(*row)
-row=[]
-row.append(types.InlineKeyboardButton(text="➕ Задать время", callback_data="order_time"))
 row.append(types.InlineKeyboardButton(text="➕ Задать место", callback_data="order_place"))
 ordermarkup.row(*row)
 row=[]
-row.append(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
+row.append(types.InlineKeyboardButton(text="➕ Задать дату", callback_data="order_date"))
+row.append(types.InlineKeyboardButton(text="➕ Задать время", callback_data="order_time"))
+ordermarkup.row(*row)
+row=[]
 row.append(types.InlineKeyboardButton(text="➕ Задать телефон", callback_data="order_number"))
+row.append(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
 ordermarkup.row(*row)
 ordermarkup.add(types.InlineKeyboardButton(text="🔙 Отменить", callback_data="order_back"))
 
 ordersendmarkup = types.InlineKeyboardMarkup()
 row=[]
 row.append(types.InlineKeyboardButton(text="➕ Задать шоу", callback_data="order_header"))
-row.append(types.InlineKeyboardButton(text="➕ Задать дату", callback_data="order_date"))
-ordersendmarkup.row(*row)
-row=[]
-row.append(types.InlineKeyboardButton(text="➕ Задать время", callback_data="order_time"))
 row.append(types.InlineKeyboardButton(text="➕ Задать место", callback_data="order_place"))
 ordersendmarkup.row(*row)
 row=[]
-row.append(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
+row.append(types.InlineKeyboardButton(text="➕ Задать дату", callback_data="order_date"))
+row.append(types.InlineKeyboardButton(text="➕ Задать время", callback_data="order_time"))
+ordersendmarkup.row(*row)
+row=[]
 row.append(types.InlineKeyboardButton(text="➕ Задать телефон", callback_data="order_number"))
+row.append(types.InlineKeyboardButton(text="➕ Задать комментарий", callback_data="order_comment"))
 ordersendmarkup.row(*row)
 ordersendmarkup.add(types.InlineKeyboardButton(text="🔙 Отменить", callback_data="order_back"))
 ordersendmarkup.add(types.InlineKeyboardButton(text="☑ Отправить", callback_data="order_send"))
