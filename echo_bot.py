@@ -153,6 +153,13 @@ def is_time(s):
     else:
         return False
 
+def is_phone(s):
+    result = re.findall(r'^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$', s)
+    if len(result) > 0:
+        return True
+    else:
+        return False
+
 def order(header = None,
           date = None,
           time = None,
@@ -286,13 +293,17 @@ def echo_message(message):
                     bot.send_message(chat_id, "Комментарий к заказу успешно задан", parse_mode='MARKDOWN',
                                           reply_markup=orderupdatemarkup)
                 elif chat_id in inordernumber:
-                    cursor.execute(
-                        "update orders set phone_number = '" + text + "' where chat_id = "
-                        + str(chat_id) + " and status = 0;")
-                    conn.commit()
-                    inordernumber.remove(chat_id)
-                    bot.send_message(chat_id, "Контактрый номер телефона успешно задан", parse_mode='MARKDOWN',
-                                          reply_markup=orderupdatemarkup)
+                    if is_phone(text):
+                        cursor.execute(
+                            "update orders set phone_number = '" + text + "' where chat_id = "
+                            + str(chat_id) + " and status = 0;")
+                        conn.commit()
+                        inordernumber.remove(chat_id)
+                        bot.send_message(chat_id, "Контактрый номер телефона успешно задан", parse_mode='MARKDOWN',
+                                              reply_markup=orderupdatemarkup)
+                    else:
+                        bot.send_message(chat_id,
+                                         "Задайте корректный номер телефона")
                 elif chat_id in inordertime:
                     if is_time(text):
                         inordertime.remove(chat_id)
