@@ -147,7 +147,7 @@ def is_str(s):
         return True
 
 def is_time(s):
-    result = re.findall(r'[0,1,2][0,1,2,3,4][:][0,1,2,3,4,5]\d{1}', s)
+    result = re.findall(r'[0,1,2]\d{1}[:][0,1,2,3,4,5]\d{1}', s)
     if len(result) > 0:
         return True
     else:
@@ -165,9 +165,11 @@ def order(header = None,
     order_time = "*Время:* " + xstr(time) + "\n"
     order_place = "*Место:* " + xstr(place) + "\n"
     order_comment = "*Ваш комментарий:* " + xstr(comment) + "\n"
-    order_customer = "*Заказчик:* " + xstr(customer) + "\n"
     order_number = "*Контактный номер:* " + xstr(number) + "\n"
-    order = order_header + order_date + order_time + order_place + order_comment + order_customer + order_number
+    order_customer = "\n*Заказчик:* " + xstr(customer)
+    order = order_header + order_date + order_time + order_place + order_comment + order_number
+    if is_str(customer):
+        order =  order + order_customer
     return order
 
 def check_order(header, date, time, place, number):
@@ -327,10 +329,10 @@ def echo_message(message):
                                                 "where chat_id = " + str(chat_id) + " and status = 0"
                                                                                     " order by rowid desc limit 1;")
                         if len(cursor.fetchall()) == 0:
-                            cursor.execute("INSERT INTO orders(chat_id, header) VALUES (" + str(chat_id)
-                                       + ", '_Укажите шоу_');")
+                            cursor.execute("INSERT INTO orders(chat_id) VALUES (" + str(chat_id)
+                                       + ");")
                             conn.commit()
-                            bot.send_message(message.chat.id, order(header="_Укажите шоу_"), parse_mode='MARKDOWN',
+                            bot.send_message(message.chat.id, order(), parse_mode='MARKDOWN',
                                              reply_markup=ordermarkup)
                         else:
                             for row in cursor.execute(
