@@ -167,7 +167,7 @@ def order(header = None,
     order_comment = "*Ваш комментарий:* " + xstr(comment) + "\n"
     order_number = "*Контактный номер:* " + xstr(number) + "\n"
     order_customer = "\n*Заказчик:* " + xstr(customer)
-    order = order_header + order_place + order_date + order_time + order_comment + order_number
+    order = order_header + order_place + order_date + order_time + order_number + order_comment
     if is_str(customer):
         order =  order + order_customer
     return order
