@@ -574,36 +574,80 @@ def less_day(call):
 @bot.callback_query_handler(func=lambda call: call.data == 'order_place')
 def less_day(call):
     try:
-        inorderplace.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Отправьте мне место проведения шоу с указанием адреса", parse_mode='MARKDOWN',
-                         disable_web_page_preview=True)
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
+                                " rowid from orders "
+                                "where chat_id = " + str(call.message.chat.id) + " and status = 0"
+                                                                                 " order by rowid desc limit 1;")
+        if len(cursor.fetchall()) == 0:
+            bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
+                                  parse_mode='MARKDOWN')
+        else:
+            inorderplace.append(call.message.chat.id)
+            bot.send_message(call.message.chat.id, "Отправьте мне место проведения шоу с указанием адреса", parse_mode='MARKDOWN',
+                             disable_web_page_preview=True)
+        conn.close()
     except:
         pass
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_comment')
 def less_day(call):
     try:
-        inordercomment.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Отправьте мне комментарий к заказу", parse_mode='MARKDOWN',
-                         disable_web_page_preview=True)
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
+                                " rowid from orders "
+                                "where chat_id = " + str(call.message.chat.id) + " and status = 0"
+                                                                                 " order by rowid desc limit 1;")
+        if len(cursor.fetchall()) == 0:
+            bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
+                                  parse_mode='MARKDOWN')
+        else:
+            inordercomment.append(call.message.chat.id)
+            bot.send_message(call.message.chat.id, "Отправьте мне комментарий к заказу", parse_mode='MARKDOWN',
+                             disable_web_page_preview=True)
+        conn.close()
     except:
         pass
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_time')
 def less_day(call):
     try:
-        inordertime.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Отправьте мне время заказа\nВ формате ЧЧ:ММ", parse_mode='MARKDOWN',
-                         disable_web_page_preview=True)
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
+                                " rowid from orders "
+                                "where chat_id = " + str(call.message.chat.id) + " and status = 0"
+                                                                                 " order by rowid desc limit 1;")
+        if len(cursor.fetchall()) == 0:
+            bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
+                                  parse_mode='MARKDOWN')
+        else:
+            inordertime.append(call.message.chat.id)
+            bot.send_message(call.message.chat.id, "Отправьте мне время заказа\nВ формате ЧЧ:ММ", parse_mode='MARKDOWN',
+                             disable_web_page_preview=True)
+        conn.close()
     except:
         pass
 
 @bot.callback_query_handler(func=lambda call: call.data == 'order_number')
 def less_day(call):
     try:
-        inordernumber.append(call.message.chat.id)
-        bot.send_message(call.message.chat.id, "Отправьте мне свой телефон", parse_mode='MARKDOWN',
-                         disable_web_page_preview=True)
+        conn = sqlite3.connect("mydatabase.db")
+        cursor = conn.cursor()
+        cursor = cursor.execute("select header, date, time, place, comment, phone_number,"
+                                " rowid from orders "
+                                "where chat_id = " + str(call.message.chat.id) + " and status = 0"
+                                                                                 " order by rowid desc limit 1;")
+        if len(cursor.fetchall()) == 0:
+            bot.edit_message_text("*Начните новый предзаказ*", call.from_user.id, call.message.message_id,
+                                  parse_mode='MARKDOWN')
+        else:
+            inordernumber.append(call.message.chat.id)
+            bot.send_message(call.message.chat.id, "Отправьте мне свой телефон", parse_mode='MARKDOWN',
+                             disable_web_page_preview=True)
+        conn.close()
     except:
         pass
 
