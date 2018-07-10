@@ -89,7 +89,7 @@ contactkeyboardmarkup.add(types.KeyboardButton('Отправить мой ном
 elementmarkup_soc = types.InlineKeyboardMarkup()
 elementmarkup_soc.add(types.InlineKeyboardButton(text="Instagram", url="https://www.instagram.com/element_show"))
 elementmarkup_soc.add(types.InlineKeyboardButton(text="ВКонтакте", url="https://vk.com/club92907131"))
-elementmarkup_soc.add(types.InlineKeyboardButton(text="Официальный сайт", url="http://deliriumshow.com"))
+elementmarkup_soc.add(types.InlineKeyboardButton(text="Официальный сайт", url="http://elementshow.com"))
 
 adminmarkup = types.ReplyKeyboardMarkup(row_width=1)
 itembtn1 = types.KeyboardButton('Массовая рассылка')
@@ -410,6 +410,8 @@ def echo_message(message):
                     else:
                         bot.send_message(chat_id, "Только для личных чатов",
                                          reply_markup=elementmarkup_unreg)
+                elif text == "Назад":
+                    bot.send_message(chat_id, "Всё хорошо, уже вернулись", reply_markup=elementmarkup_reg)
                 elif text == "Про нас":
                     bot.send_message(chat_id,
                                      "Арт-лаборатория ELEMENT\n\nПрофессиональные "
