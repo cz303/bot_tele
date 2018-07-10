@@ -394,6 +394,8 @@ def echo_message(message):
                     elif text == "Личный кабинет":
                         inlk.append(chat_id)
                         bot.send_message(chat_id, "Ваш личный кабинет", reply_markup=elementmarkup_lk)
+                    elif text == "Назад":
+                        bot.send_message(chat_id, "Всё хорошо, уже вернулись", reply_markup=elementmarkup_reg)
             else:
                 if text == 'Подписка на бота':
                     if chat_type == 'private':
@@ -410,8 +412,6 @@ def echo_message(message):
                     else:
                         bot.send_message(chat_id, "Только для личных чатов",
                                          reply_markup=elementmarkup_unreg)
-                elif text == "Назад":
-                    bot.send_message(chat_id, "Всё хорошо, уже вернулись", reply_markup=elementmarkup_reg)
                 elif text == "Про нас":
                     bot.send_message(chat_id,
                                      "Арт-лаборатория ELEMENT\n\nПрофессиональные "
