@@ -199,8 +199,10 @@ bot = telebot.TeleBot(telegrambot_elem)
 def send_welcome(message):
     conn = sqlite3.connect(dbname)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO chats(chat_id) VALUES (" + str(message.chat.id) + ");")
-    conn.commit()
+    cur = cursor.execute("select chat_id from chat_id where chat_id = " + str(message.chat.id) + ";")
+    if len(cur.fetchall()) == 0:
+        cursor.execute("INSERT INTO chats(chat_id) VALUES (" + str(message.chat.id) + ");")
+        conn.commit()
     conn.close()
     bot.send_message(message.chat.id, "Привет! Справшивай, я расскажу", reply_markup=elementmarkup_unreg)
 
